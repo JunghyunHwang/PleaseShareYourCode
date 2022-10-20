@@ -47,6 +47,7 @@
             // 
             // BtnExport
             // 
+            this.BtnExport.Enabled = false;
             this.BtnExport.Location = new System.Drawing.Point(667, 205);
             this.BtnExport.Name = "BtnExport";
             this.BtnExport.Size = new System.Drawing.Size(100, 32);
