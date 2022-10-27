@@ -125,7 +125,7 @@ namespace PleaseShareYouCode
                 sbFilePath.Clear();
             }
 
-            MessageBox.Show("추출 완료!");
+            MessageBox.Show("추출 완료!", "Message");
             BtnExport.Enabled = false;
         }
     }

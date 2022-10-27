@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PSYC));
             this.BtnOpen = new System.Windows.Forms.Button();
             this.BtnExport = new System.Windows.Forms.Button();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
@@ -41,7 +42,7 @@
             this.BtnOpen.Name = "BtnOpen";
             this.BtnOpen.Size = new System.Drawing.Size(100, 32);
             this.BtnOpen.TabIndex = 0;
-            this.BtnOpen.Text = "open";
+            this.BtnOpen.Text = "Open";
             this.BtnOpen.UseVisualStyleBackColor = true;
             this.BtnOpen.Click += new System.EventHandler(this.BtnOpen_Click);
             // 
@@ -52,7 +53,7 @@
             this.BtnExport.Name = "BtnExport";
             this.BtnExport.Size = new System.Drawing.Size(100, 32);
             this.BtnExport.TabIndex = 2;
-            this.BtnExport.Text = "export";
+            this.BtnExport.Text = "Export";
             this.BtnExport.UseVisualStyleBackColor = true;
             this.BtnExport.Click += new System.EventHandler(this.BtnExport_Click);
             // 
@@ -72,6 +73,7 @@
             this.Controls.Add(this.CbFileList);
             this.Controls.Add(this.BtnExport);
             this.Controls.Add(this.BtnOpen);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "PSYC";
             this.Text = "PSYC";
             this.ResumeLayout(false);
