@@ -79,12 +79,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FailFileMessage.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FailFileMessage.Designer.cs">
-      <DependentUpon>FailFileMessage.cs</DependentUpon>
-    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -93,9 +87,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="FailFileMessage.resx">
-      <DependentUpon>FailFileMessage.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
