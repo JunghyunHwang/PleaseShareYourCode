@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using PleaseShareYourCode;
 
 namespace PleaseShareYouCode
 {
@@ -20,7 +21,7 @@ namespace PleaseShareYouCode
             InitializeComponent();
         }
 
-        private string[] GetFilePaths(string path, List<string> extensions)
+        private string[] GetFilesPath(string path, List<string> extensions)
         {
             string[] allFiles = Directory.GetFiles(path);
             return allFiles.Where(f => extensions.Contains(f.Split('.').Last())).ToArray();
@@ -38,31 +39,31 @@ namespace PleaseShareYouCode
             directoryPath = folderBrowserDialog1.SelectedPath;
             List<string> extensions = new List<string> { "h", "cpp" };
 
-            string[] files = GetFilePaths(directoryPath, extensions);
+            string[] filesPath = GetFilesPath(directoryPath, extensions);
 
-            if (files.Length == 0)
+            if (filesPath.Length == 0)
             {
                 return;
             }
 
             // Change order .h .cpp
-            for (int i = 0; i < files.Length - 1; i++)
+            for (int i = 0; i < filesPath.Length - 1; i++)
             {
-                string fileName = files[i].Split('.').First();
-                string nextFileName = files[i + 1].Split('.').First();
+                string fileName = filesPath[i].Split('.').First();
+                string nextFileName = filesPath[i + 1].Split('.').First();
 
                 if (fileName == nextFileName)
                 {
-                    string temp = files[i];
-                    files[i] = files[i + 1];
-                    files[i + 1] = temp;
+                    string temp = filesPath[i];
+                    filesPath[i] = filesPath[i + 1];
+                    filesPath[i + 1] = temp;
                 }
             }
 
             CbFileList.Items.Clear();
             BtnExport.Enabled = true;
 
-            foreach (string file in files)
+            foreach (string file in filesPath)
             {
                 string fileName = file.Split('\\').Last();
 
@@ -87,6 +88,8 @@ namespace PleaseShareYouCode
 
             StringBuilder sbFilePath = new StringBuilder(256);
             StringBuilder sbComment = new StringBuilder(256);
+            List<string> failFiles = new List<string>(CbFileList.Items.Count);
+
             const string DIVIDING_LINE = "----------------------";
 
             for (int i = 0; i < CbFileList.Items.Count; ++i)
@@ -95,37 +98,62 @@ namespace PleaseShareYouCode
                 {
                     string fileName = CbFileList.Items[i].ToString();
 
+                    sbComment.Clear();
+                    sbFilePath.Clear();
+
                     sbComment.Append("//").Append(DIVIDING_LINE).Append(fileName).Append(DIVIDING_LINE);
                     sbFilePath.Append(directoryPath).Append('\\').Append(fileName);
 
-                    using (StreamReader reader = new StreamReader(File.Open(sbFilePath.ToString(), FileMode.Open)))
-                    using (StreamWriter writer = new StreamWriter(File.Open(saveFileDialog1.FileName, FileMode.Append)))
+                    try
                     {
-                        writer.WriteLine(sbComment.ToString());
-                        writer.WriteLine();
-
-                        while (!reader.EndOfStream)
+                        using (StreamReader reader = new StreamReader(File.Open(sbFilePath.ToString(), FileMode.Open)))
+                        using (StreamWriter writer = new StreamWriter(File.Open(saveFileDialog1.FileName, FileMode.Append)))
                         {
-                            string line = reader.ReadLine();
+                            writer.WriteLine(sbComment.ToString());
+                            writer.WriteLine();
 
-                            if (line.Length > 0 && line[0] == '#')
+                            while (!reader.EndOfStream)
                             {
-                                continue;
+                                string line = reader.ReadLine();
+
+                                writer.WriteLine(line);
                             }
 
-                            writer.WriteLine(line);
+                            writer.WriteLine();
+                            writer.WriteLine();
                         }
-
-                        writer.WriteLine();
-                        writer.WriteLine();
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        failFiles.Add(fileName);
+                        continue;
                     }
                 }
-
-                sbComment.Clear();
-                sbFilePath.Clear();
             }
 
-            MessageBox.Show("추출 완료!", "Message");
+            StringBuilder resultMessage = new StringBuilder(256);
+
+            if (failFiles.Count == 0)
+            {
+                resultMessage.AppendLine("실패한 파일 없음");
+            }
+            else
+            {
+                resultMessage.Append("실패한 파일 개수: ");
+                resultMessage.AppendLine(failFiles.Count.ToString());
+            }
+
+            var fail = failFiles.ToArray();
+
+            for (uint i = 0; i < failFiles.Count; ++i)
+            {
+                resultMessage.AppendLine(fail[i]);
+            }
+
+            resultMessage.AppendLine();
+            resultMessage.Append("추출 완료!");
+
+            MessageBox.Show(resultMessage.ToString(), "Message");
             BtnExport.Enabled = false;
         }
     }
