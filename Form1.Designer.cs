@@ -59,11 +59,19 @@
             // 
             // CbFileList
             // 
+            this.CbFileList.AllowDrop = true;
+            this.CbFileList.CheckOnClick = true;
+            this.CbFileList.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.CbFileList.FormattingEnabled = true;
-            this.CbFileList.Location = new System.Drawing.Point(111, 44);
+            this.CbFileList.Location = new System.Drawing.Point(100, 50);
             this.CbFileList.Name = "CbFileList";
-            this.CbFileList.Size = new System.Drawing.Size(536, 324);
+            this.CbFileList.Size = new System.Drawing.Size(525, 344);
             this.CbFileList.TabIndex = 3;
+            this.CbFileList.DragDrop += new System.Windows.Forms.DragEventHandler(this.CbFileList_DragDrop);
+            this.CbFileList.DragOver += new System.Windows.Forms.DragEventHandler(this.CbFileList_DragOver);
+            this.CbFileList.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CbFileList_MouseDown);
+            this.CbFileList.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CbFileList_MouseMove);
+            this.CbFileList.MouseUp += new System.Windows.Forms.MouseEventHandler(this.CbFileList_MouseUp);
             // 
             // PSYC
             // 

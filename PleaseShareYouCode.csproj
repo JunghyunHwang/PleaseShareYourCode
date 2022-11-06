@@ -116,8 +116,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Letter_P_pink_34907.ico" />
-    <Content Include="nftcollection_digital_future_system_security_icon_197465.ico" />
-    <Content Include="p_letter_icon_212368.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
