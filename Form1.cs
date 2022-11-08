@@ -23,44 +23,7 @@ namespace PleaseShareYouCode
         {
             InitializeComponent();
 #if DEBUG
-            directoryPath = "C:\\Users\\dmagk\\Desktop\\Ja_Hwang\\POCU\\C++\\Assignment2";
-            List<string> extensions = new List<string> { "h", "cpp" };
-
-            string[] filesPath = GetFilesPath(directoryPath, extensions);
-
-            if (filesPath.Length == 0)
-            {
-                return;
-            }
-
-            // Change order .h .cpp
-            for (int i = 0; i < filesPath.Length - 1; i++)
-            {
-                string fileName = filesPath[i].Split('.').First();
-                string nextFileName = filesPath[i + 1].Split('.').First();
-
-                if (fileName == nextFileName)
-                {
-                    string temp = filesPath[i];
-                    filesPath[i] = filesPath[i + 1];
-                    filesPath[i + 1] = temp;
-                }
-            }
-
-            CbFileList.Items.Clear();
-            BtnExport.Enabled = true;
-
-            foreach (string file in filesPath)
-            {
-                string fileName = file.Split('\\').Last();
-
-                if (fileName == "main.cpp" || fileName == "Main.cpp")
-                {
-                    continue;
-                }
-
-                CbFileList.Items.Add(fileName, true);
-            }
+            SetFileList();
 #endif
         }
 
@@ -215,6 +178,50 @@ namespace PleaseShareYouCode
         }
 #endif
 
+#if DEBUG
+        private void SetFileList()
+        {
+            directoryPath = "C:\\Users\\dmagk\\Desktop\\Ja_Hwang\\POCU\\C++\\Assignment2";
+            List<string> extensions = new List<string> { "h", "cpp" };
+
+            string[] filesPath = GetFilesPath(directoryPath, extensions);
+
+            if (filesPath.Length == 0)
+            {
+                return;
+            }
+
+            // Change order .h .cpp
+            for (int i = 0; i < filesPath.Length - 1; i++)
+            {
+                string fileName = filesPath[i].Split('.').First();
+                string nextFileName = filesPath[i + 1].Split('.').First();
+
+                if (fileName == nextFileName)
+                {
+                    string temp = filesPath[i];
+                    filesPath[i] = filesPath[i + 1];
+                    filesPath[i + 1] = temp;
+                }
+            }
+
+            CbFileList.Items.Clear();
+            BtnExport.Enabled = true;
+
+            foreach (string file in filesPath)
+            {
+                string fileName = file.Split('\\').Last();
+
+                if (fileName == "main.cpp" || fileName == "Main.cpp")
+                {
+                    continue;
+                }
+
+                CbFileList.Items.Add(fileName, true);
+            }
+        }
+#endif
+
         private void CbFileList_MouseDown(object sender, MouseEventArgs e)
         {
 #if DEBUG
@@ -259,7 +266,7 @@ namespace PleaseShareYouCode
             string item = CbFileList.Items[index].ToString();
             bIsDragAndDrop = true;
 
-            CbFileList.DoDragDrop(item, DragDropEffects.All);
+            CbFileList.DoDragDrop(item, DragDropEffects.Move);
         }
 
         private void CbFileList_DragDrop(object sender, DragEventArgs e)
@@ -268,13 +275,15 @@ namespace PleaseShareYouCode
             Console.WriteLine("Start drag drop");
             PrintMouseHandle();
 #endif
-            Point point = CbFileList.PointToClient(new Point(e.X, e.Y));
+            Point point = CbFileList.PointToClient(new Point(e.X , e.Y));
+            point.Y = point.Y < 0 ? 0 : point.Y;
+
             int newIndex = CbFileList.IndexFromPoint(point);
 
             object data = e.Data.GetData(typeof(string));
             bool bIsChecked = CbFileList.GetItemChecked(CbFileList.SelectedIndex);
 
-            newIndex = newIndex < 0 ? CbFileList.Items.Count - 1 : newIndex;
+            newIndex = newIndex < 0 ? 0 : newIndex;
 
             CbFileList.Items.Remove(data);
             CbFileList.Items.Insert(newIndex, data);
@@ -285,7 +294,7 @@ namespace PleaseShareYouCode
         private void CbFileList_DragOver(object sender, DragEventArgs e)
         {
             Console.WriteLine("Start DragOver");
-            e.Effect = DragDropEffects.All;
+            e.Effect = DragDropEffects.Move;
         }
     }
 }

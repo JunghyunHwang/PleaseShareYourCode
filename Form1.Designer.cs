@@ -38,7 +38,7 @@
             // 
             // BtnOpen
             // 
-            this.BtnOpen.Location = new System.Drawing.Point(667, 167);
+            this.BtnOpen.Location = new System.Drawing.Point(660, 170);
             this.BtnOpen.Name = "BtnOpen";
             this.BtnOpen.Size = new System.Drawing.Size(100, 32);
             this.BtnOpen.TabIndex = 0;
@@ -49,7 +49,7 @@
             // BtnExport
             // 
             this.BtnExport.Enabled = false;
-            this.BtnExport.Location = new System.Drawing.Point(667, 205);
+            this.BtnExport.Location = new System.Drawing.Point(660, 210);
             this.BtnExport.Name = "BtnExport";
             this.BtnExport.Size = new System.Drawing.Size(100, 32);
             this.BtnExport.TabIndex = 2;
