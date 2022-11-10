@@ -5,6 +5,8 @@ VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PleaseShareYouCode", "PleaseShareYouCode.csproj", "{0CD32A62-6320-4892-BCBB-509AAD944F31}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "PleaseShareYourCodeSetup", "..\PleaseShareYourCodeSetup\PleaseShareYourCodeSetup.vdproj", "{C61747BA-1D7C-4470-A9C6-505BE137A84D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,8 @@ Global
 		{0CD32A62-6320-4892-BCBB-509AAD944F31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CD32A62-6320-4892-BCBB-509AAD944F31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0CD32A62-6320-4892-BCBB-509AAD944F31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C61747BA-1D7C-4470-A9C6-505BE137A84D}.Debug|Any CPU.ActiveCfg = Debug
+		{C61747BA-1D7C-4470-A9C6-505BE137A84D}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
