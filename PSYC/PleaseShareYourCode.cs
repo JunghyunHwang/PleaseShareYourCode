@@ -142,29 +142,22 @@ namespace PleaseShareYouCode
                 }
             }
 
-            StringBuilder resultMessage = new StringBuilder(256);
+            if (failFiles.Count > 0)
+            {
+                StringBuilder resultMessage = new StringBuilder(256);
 
-            if (failFiles.Count == 0)
-            {
-                resultMessage.AppendLine("실패한 파일 없음");
-            }
-            else
-            {
                 resultMessage.Append("실패한 파일 개수: ");
                 resultMessage.AppendLine(failFiles.Count.ToString());
+
+                var fail = failFiles.ToArray();
+
+                for (uint i = 0; i < failFiles.Count; ++i)
+                {
+                    resultMessage.AppendLine(fail[i]);
+                }
+
+                MessageBox.Show(resultMessage.ToString(), "Message");
             }
-
-            var fail = failFiles.ToArray();
-
-            for (uint i = 0; i < failFiles.Count; ++i)
-            {
-                resultMessage.AppendLine(fail[i]);
-            }
-
-            resultMessage.AppendLine();
-            resultMessage.Append("추출 완료!");
-
-            MessageBox.Show(resultMessage.ToString(), "Message");
 
             CbFileList.Items.Clear();
             BtnExport.Enabled = false;
