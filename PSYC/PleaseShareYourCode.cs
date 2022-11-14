@@ -43,6 +43,8 @@ namespace PleaseShareYouCode
             }
 
             directoryPath = folderBrowserDialog1.SelectedPath;
+            TbTitle.Text = directoryPath.Split('\\').Last();
+
             List<string> extensions = new List<string> { "h", "cpp" };
 
             string[] filesPath = GetFilesPath(directoryPath, extensions);
@@ -86,6 +88,7 @@ namespace PleaseShareYouCode
         {
             saveFileDialog1.Filter = "|*.txt";
             saveFileDialog1.Title = "Save";
+            saveFileDialog1.FileName = "test";
 
             if (CbFileList.CheckedItems.Count == 0)
             {
@@ -158,6 +161,11 @@ namespace PleaseShareYouCode
 
                 MessageBox.Show(resultMessage.ToString(), "Message");
             }
+            else
+            {
+                MessageBox.Show("추출 완료!");
+            }
+
 
             CbFileList.Items.Clear();
             BtnExport.Enabled = false;
@@ -175,6 +183,7 @@ namespace PleaseShareYouCode
         private void SetFileList()
         {
             directoryPath = "C:\\Users\\dmagk\\Desktop\\Ja_Hwang\\POCU\\C++\\Assignment2";
+            TbTitle.Text = directoryPath.Split('\\').Last();
             List<string> extensions = new List<string> { "h", "cpp" };
 
             string[] filesPath = GetFilesPath(directoryPath, extensions);

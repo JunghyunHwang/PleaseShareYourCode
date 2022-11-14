@@ -34,11 +34,12 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.CbFileList = new System.Windows.Forms.CheckedListBox();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.TbTitle = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // BtnOpen
             // 
-            this.BtnOpen.Location = new System.Drawing.Point(660, 170);
+            this.BtnOpen.Location = new System.Drawing.Point(582, 400);
             this.BtnOpen.Name = "BtnOpen";
             this.BtnOpen.Size = new System.Drawing.Size(100, 32);
             this.BtnOpen.TabIndex = 0;
@@ -49,7 +50,7 @@
             // BtnExport
             // 
             this.BtnExport.Enabled = false;
-            this.BtnExport.Location = new System.Drawing.Point(660, 210);
+            this.BtnExport.Location = new System.Drawing.Point(688, 400);
             this.BtnExport.Name = "BtnExport";
             this.BtnExport.Size = new System.Drawing.Size(100, 32);
             this.BtnExport.TabIndex = 2;
@@ -73,11 +74,23 @@
             this.CbFileList.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CbFileList_MouseMove);
             this.CbFileList.MouseUp += new System.Windows.Forms.MouseEventHandler(this.CbFileList_MouseUp);
             // 
+            // TbTitle
+            // 
+            this.TbTitle.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.TbTitle.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.TbTitle.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.TbTitle.Location = new System.Drawing.Point(100, 24);
+            this.TbTitle.Name = "TbTitle";
+            this.TbTitle.Size = new System.Drawing.Size(100, 18);
+            this.TbTitle.TabIndex = 4;
+            this.TbTitle.Text = "POCU";
+            // 
             // PSYC
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.TbTitle);
             this.Controls.Add(this.CbFileList);
             this.Controls.Add(this.BtnExport);
             this.Controls.Add(this.BtnOpen);
@@ -85,6 +98,7 @@
             this.Name = "PSYC";
             this.Text = "PSYC";
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -94,6 +108,7 @@
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.CheckedListBox CbFileList;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.TextBox TbTitle;
     }
 }
 
