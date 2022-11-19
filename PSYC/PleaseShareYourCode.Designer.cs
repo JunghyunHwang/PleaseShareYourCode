@@ -1,4 +1,8 @@
-﻿namespace PleaseShareYouCode
+﻿using PleaseShareYourCode.PSYC;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace PleaseShareYouCode
 {
     partial class PSYC
     {
@@ -39,7 +43,7 @@
             // 
             // BtnOpen
             // 
-            this.BtnOpen.Location = new System.Drawing.Point(582, 400);
+            this.BtnOpen.Location = new System.Drawing.Point(660, 170);
             this.BtnOpen.Name = "BtnOpen";
             this.BtnOpen.Size = new System.Drawing.Size(100, 32);
             this.BtnOpen.TabIndex = 0;
@@ -50,7 +54,7 @@
             // BtnExport
             // 
             this.BtnExport.Enabled = false;
-            this.BtnExport.Location = new System.Drawing.Point(688, 400);
+            this.BtnExport.Location = new System.Drawing.Point(660, 210);
             this.BtnExport.Name = "BtnExport";
             this.BtnExport.Size = new System.Drawing.Size(100, 32);
             this.BtnExport.TabIndex = 2;
@@ -79,11 +83,11 @@
             this.TbTitle.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.TbTitle.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.TbTitle.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.TbTitle.Location = new System.Drawing.Point(100, 24);
+            this.TbTitle.Location = new System.Drawing.Point(111, 26);
             this.TbTitle.Name = "TbTitle";
+            this.TbTitle.ReadOnly = true;
             this.TbTitle.Size = new System.Drawing.Size(100, 18);
             this.TbTitle.TabIndex = 4;
-            this.TbTitle.Text = "POCU";
             // 
             // PSYC
             // 
@@ -95,7 +99,9 @@
             this.Controls.Add(this.BtnExport);
             this.Controls.Add(this.BtnOpen);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Location = new System.Drawing.Point(500, 300);
             this.Name = "PSYC";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "PSYC";
             this.ResumeLayout(false);
             this.PerformLayout();

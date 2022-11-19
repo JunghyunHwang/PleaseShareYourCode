@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using PleaseShareYourCode;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using PleaseShareYourCode.PSYC;
 
 namespace PleaseShareYouCode
 {
@@ -88,7 +88,7 @@ namespace PleaseShareYouCode
         {
             saveFileDialog1.Filter = "|*.txt";
             saveFileDialog1.Title = "Save";
-            saveFileDialog1.FileName = "test";
+            saveFileDialog1.FileName = TbTitle.Text;
 
             if (CbFileList.CheckedItems.Count == 0)
             {
@@ -169,6 +169,7 @@ namespace PleaseShareYouCode
 
             CbFileList.Items.Clear();
             BtnExport.Enabled = false;
+            TbTitle.Text = "";
         }
 
 #if DEBUG
