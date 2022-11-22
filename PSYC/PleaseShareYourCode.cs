@@ -9,7 +9,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using PleaseShareYourCode;
-using PleaseShareYourCode.PSYC;
+using System.Xml.Linq;
+using static System.Net.Mime.MediaTypeNames;
+using System.Runtime.CompilerServices;
 
 namespace PleaseShareYouCode
 {
@@ -23,14 +25,95 @@ namespace PleaseShareYouCode
         {
             InitializeComponent();
 #if DEBUG
-            SetFileList();
+            //SetFileList();
 #endif
         }
 
-        private string[] GetFilesPath(string path, List<string> extensions)
+        private string[] GetFilesOrNull()
         {
-            string[] allFiles = Directory.GetFiles(path);
-            return allFiles.Where(f => extensions.Contains(f.Split('.').Last())).ToArray();
+            List<string> allFiles = new List<string>(64);
+            string[] extensions = new string[2];
+            string ignoreFileName;
+            StringBuilder path = new StringBuilder();
+            bool bHasHeaderFile = false;
+
+            path.Append(directoryPath);
+
+            if (r_btnCS.Checked == true)
+            {
+                extensions[0] = "cs";
+                path.Append("\\").Append(directoryPath.Split('\\').Last());
+                ignoreFileName = "Program.cs";
+            }
+            else if (r_btnJAVA.Checked == true)
+            {
+                extensions[0] = "java";
+                path.Append("\\").Append("src\\academy\\pocu\\comp2500\\").Append(directoryPath.Split('\\').Last().ToLower());
+                ignoreFileName = "Program.java";
+            }
+            else if (r_btnC.Checked == true)
+            {
+                extensions[0] = "h";
+                extensions[1] = "c";
+                ignoreFileName = "main.c";
+                bHasHeaderFile = true;
+            }
+            else
+            {
+                extensions[0] = "h";
+                extensions[1] = "cpp";
+                ignoreFileName = "main.cpp";
+                bHasHeaderFile = true;
+            }
+
+            directoryPath = path.ToString();
+
+            try
+            {
+                allFiles.AddRange(Directory.GetFiles(directoryPath));
+            }
+            catch (DirectoryNotFoundException)
+            {
+                MessageBox.Show("해당 언어의 파일을 찾을 수 없거나 폴더가 비어있습니다.", "Message");
+                return null;
+            }
+
+            foreach (var file in allFiles)
+            {
+                string fileName = file.Split('\\').Last();
+
+                if (fileName == ignoreFileName)
+                {
+                    allFiles.Remove(file);
+                    break;
+                }
+            }
+
+            string[] result = allFiles.Where(f => extensions.Contains(f.Split('.').Last())).ToArray();
+
+            if (result.Length == 0)
+            {
+                MessageBox.Show("해당 언어의 파일을 찾을 수 없거나 폴더가 비어있습니다.", "Message");
+                return result;
+            }
+
+            if (bHasHeaderFile)
+            {
+                for (int i = 0; i < result.Length - 1; i++)
+                {
+                    string fileName = result[i].Split('.').First();
+                    string nextFileName = result[i + 1].Split('.').First();
+
+                    if (fileName == nextFileName)
+                    {
+                        string temp = result[i];
+                        result[i] = result[i + 1];
+                        result[i + 1] = temp;
+                    }
+                }
+            }
+
+            return result;
         }
 
         private void BtnOpen_Click(object sender, EventArgs e)
@@ -43,42 +126,22 @@ namespace PleaseShareYouCode
             }
 
             directoryPath = folderBrowserDialog1.SelectedPath;
-            TbTitle.Text = directoryPath.Split('\\').Last();
+            labelProject.Text = "";
 
-            List<string> extensions = new List<string> { "h", "cpp" };
+            string[] files = GetFilesOrNull();
 
-            string[] filesPath = GetFilesPath(directoryPath, extensions);
-
-            if (filesPath.Length == 0)
+            if (files == null || files.Length == 0)
             {
                 return;
             }
 
-            // Change order .h .cpp
-            for (int i = 0; i < filesPath.Length - 1; i++)
-            {
-                string fileName = filesPath[i].Split('.').First();
-                string nextFileName = filesPath[i + 1].Split('.').First();
-
-                if (fileName == nextFileName)
-                {
-                    string temp = filesPath[i];
-                    filesPath[i] = filesPath[i + 1];
-                    filesPath[i + 1] = temp;
-                }
-            }
-
+            labelProject.Text = directoryPath.Split('\\').Last();
             CbFileList.Items.Clear();
             BtnExport.Enabled = true;
 
-            foreach (string file in filesPath)
+            foreach (string f in files)
             {
-                string fileName = file.Split('\\').Last();
-
-                if (fileName == "main.cpp" || fileName == "Main.cpp")
-                {
-                    continue;
-                }
+                string fileName = f.Split('\\').Last();
 
                 CbFileList.Items.Add(fileName, true);
             }
@@ -88,7 +151,7 @@ namespace PleaseShareYouCode
         {
             saveFileDialog1.Filter = "|*.txt";
             saveFileDialog1.Title = "Save";
-            saveFileDialog1.FileName = TbTitle.Text;
+            saveFileDialog1.FileName = labelProject.Text;
 
             if (CbFileList.CheckedItems.Count == 0)
             {
@@ -163,31 +226,25 @@ namespace PleaseShareYouCode
             }
             else
             {
-                MessageBox.Show("추출 완료!");
+                MessageBox.Show("추출 완료!", "Message");
+                System.Diagnostics.Process.Start(saveFileDialog1.FileName);
             }
 
 
             CbFileList.Items.Clear();
             BtnExport.Enabled = false;
-            TbTitle.Text = "";
+            labelProject.Text = "";
         }
-
-#if DEBUG
-        private void PrintMouseHandle()
-        {
-            Console.WriteLine($"Mouse down: {bIsMouseDown}");
-            Console.WriteLine($"Drag and drop down: {bIsDragAndDrop}");
-        }
-#endif
 
 #if DEBUG
         private void SetFileList()
         {
             directoryPath = "C:\\Users\\dmagk\\Desktop\\Ja_Hwang\\POCU\\C++\\Assignment2";
-            TbTitle.Text = directoryPath.Split('\\').Last();
+            labelProject.Text = directoryPath.Split('\\').Last();
+
             List<string> extensions = new List<string> { "h", "cpp" };
 
-            string[] filesPath = GetFilesPath(directoryPath, extensions);
+            string[] filesPath = GetFilesOrNull();
 
             if (filesPath.Length == 0)
             {
@@ -195,7 +252,7 @@ namespace PleaseShareYouCode
             }
 
             // Change order .h .cpp
-            for (int i = 0; i < filesPath.Length - 1; i++)
+            for (int i = 0; i < filesPath.Length - 1; ++i)
             {
                 string fileName = filesPath[i].Split('.').First();
                 string nextFileName = filesPath[i + 1].Split('.').First();
@@ -227,29 +284,17 @@ namespace PleaseShareYouCode
 
         private void CbFileList_MouseDown(object sender, MouseEventArgs e)
         {
-#if DEBUG
-            Console.WriteLine("Start down");
-            PrintMouseHandle();
-#endif
             bIsMouseDown = true;
         }
 
         private void CbFileList_MouseUp(object sender, MouseEventArgs e)
         {
-#if DEBUG
-            Console.WriteLine("Start up");
-            PrintMouseHandle();
-#endif
             bIsMouseDown = false;
             bIsDragAndDrop = false;
         }
 
         private void CbFileList_MouseMove(object sender, MouseEventArgs e)
         {
-#if DEBUG
-            Console.WriteLine("Start move");
-            PrintMouseHandle();
-#endif
             if (CbFileList.SelectedItem == null)
             {
                 return;
@@ -274,10 +319,6 @@ namespace PleaseShareYouCode
 
         private void CbFileList_DragDrop(object sender, DragEventArgs e)
         {
-#if DEBUG
-            Console.WriteLine("Start drag drop");
-            PrintMouseHandle();
-#endif
             Point point = CbFileList.PointToClient(new Point(e.X , e.Y));
             point.Y = point.Y < 0 ? 0 : point.Y;
 

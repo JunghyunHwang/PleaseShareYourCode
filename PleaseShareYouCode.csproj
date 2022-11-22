@@ -79,12 +79,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PSYC\FileExtensionSelection.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="PSYC\FileExtensionSelection.Designer.cs">
-      <DependentUpon>FileExtensionSelection.cs</DependentUpon>
-    </Compile>
     <Compile Include="PSYC\PleaseShareYourCode.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -93,9 +87,6 @@
     </Compile>
     <Compile Include="PSYC\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="PSYC\FileExtensionSelection.resx">
-      <DependentUpon>FileExtensionSelection.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="PSYC\PleaseShareYourCode.resx">
       <DependentUpon>PleaseShareYourCode.cs</DependentUpon>
     </EmbeddedResource>
