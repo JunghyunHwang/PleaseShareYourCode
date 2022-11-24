@@ -9,9 +9,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using PleaseShareYourCode;
-using System.Xml.Linq;
-using static System.Net.Mime.MediaTypeNames;
-using System.Runtime.CompilerServices;
 
 namespace PleaseShareYouCode
 {
@@ -24,96 +21,59 @@ namespace PleaseShareYouCode
         public PSYC()
         {
             InitializeComponent();
-#if DEBUG
-            //SetFileList();
-#endif
         }
 
-        private string[] GetFilesOrNull()
+        private List<string> GetFiles()
         {
             List<string> allFiles = new List<string>(64);
-            string[] extensions = new string[2];
-            string ignoreFileName;
-            StringBuilder path = new StringBuilder();
             bool bHasHeaderFile = false;
-
-            path.Append(directoryPath);
 
             if (r_btnCS.Checked == true)
             {
-                extensions[0] = "cs";
-                path.Append("\\").Append(directoryPath.Split('\\').Last());
-                ignoreFileName = "Program.cs";
+                string tempDirectoryPath = directoryPath + "\\" + directoryPath.Split('\\').Last();
+                allFiles.AddRange(Directory.EnumerateFiles(tempDirectoryPath, "*.*", SearchOption.TopDirectoryOnly)
+            .Where(s => s.EndsWith(".cs") && !s.EndsWith("Program.cs")));
             }
             else if (r_btnJAVA.Checked == true)
             {
-                extensions[0] = "java";
-                path.Append("\\").Append("src\\academy\\pocu\\comp2500\\").Append(directoryPath.Split('\\').Last().ToLower());
-                ignoreFileName = "Program.java";
+                allFiles.AddRange(Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
+            .Where(s => s.EndsWith(".java") && !s.EndsWith("Program.java")));
             }
             else if (r_btnC.Checked == true)
             {
-                extensions[0] = "h";
-                extensions[1] = "c";
-                ignoreFileName = "main.c";
+                allFiles.AddRange(Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
+            .Where(s => s.EndsWith(".h") || s.EndsWith(".c") && !s.EndsWith("main.c")));
                 bHasHeaderFile = true;
             }
             else
             {
-                extensions[0] = "h";
-                extensions[1] = "cpp";
-                ignoreFileName = "main.cpp";
+                allFiles.AddRange(Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
+            .Where(s => s.EndsWith(".h") || s.EndsWith(".cpp") && !s.EndsWith("main.cpp")));
                 bHasHeaderFile = true;
             }
 
-            directoryPath = path.ToString();
-
-            try
+            if (allFiles.Count == 0)
             {
-                allFiles.AddRange(Directory.GetFiles(directoryPath));
-            }
-            catch (DirectoryNotFoundException)
-            {
-                MessageBox.Show("해당 언어의 파일을 찾을 수 없거나 폴더가 비어있습니다.", "Message");
-                return null;
-            }
-
-            foreach (var file in allFiles)
-            {
-                string fileName = file.Split('\\').Last();
-
-                if (fileName == ignoreFileName)
-                {
-                    allFiles.Remove(file);
-                    break;
-                }
-            }
-
-            string[] result = allFiles.Where(f => extensions.Contains(f.Split('.').Last())).ToArray();
-
-            if (result.Length == 0)
-            {
-                MessageBox.Show("해당 언어의 파일을 찾을 수 없거나 폴더가 비어있습니다.", "Message");
-                return result;
+                return allFiles;
             }
 
             if (bHasHeaderFile)
             {
-                for (int i = 0; i < result.Length - 1; i++)
+                for (int i = 0; i < allFiles.Count - 1; i++)
                 {
-                    string fileName = result[i].Split('.').First();
-                    string nextFileName = result[i + 1].Split('.').First();
+                    string fileName = allFiles[i].Split('.').First();
+                    string nextFileName = allFiles[i + 1].Split('.').First();
 
                     if (fileName == nextFileName)
                     {
-                        string temp = result[i];
-                        result[i] = result[i + 1];
-                        result[i + 1] = temp;
+                        string temp = allFiles[i];
+                        allFiles[i] = allFiles[i + 1];
+                        allFiles[i + 1] = temp;
                     }
                 }
             }
 
-            return result;
+            return allFiles;
         }
 
         private void BtnOpen_Click(object sender, EventArgs e)
@@ -128,10 +88,11 @@ namespace PleaseShareYouCode
             directoryPath = folderBrowserDialog1.SelectedPath;
             labelProject.Text = "";
 
-            string[] files = GetFilesOrNull();
+            List<string> files = GetFiles();
 
-            if (files == null || files.Length == 0)
+            if (files.Count == 0)
             {
+                MessageBox.Show("해당 언어로 파일을 찾을 수 없습니다.", "Message");
                 return;
             }
 
@@ -235,52 +196,6 @@ namespace PleaseShareYouCode
             BtnExport.Enabled = false;
             labelProject.Text = "";
         }
-
-#if DEBUG
-        private void SetFileList()
-        {
-            directoryPath = "C:\\Users\\dmagk\\Desktop\\Ja_Hwang\\POCU\\C++\\Assignment2";
-            labelProject.Text = directoryPath.Split('\\').Last();
-
-            List<string> extensions = new List<string> { "h", "cpp" };
-
-            string[] filesPath = GetFilesOrNull();
-
-            if (filesPath.Length == 0)
-            {
-                return;
-            }
-
-            // Change order .h .cpp
-            for (int i = 0; i < filesPath.Length - 1; ++i)
-            {
-                string fileName = filesPath[i].Split('.').First();
-                string nextFileName = filesPath[i + 1].Split('.').First();
-
-                if (fileName == nextFileName)
-                {
-                    string temp = filesPath[i];
-                    filesPath[i] = filesPath[i + 1];
-                    filesPath[i + 1] = temp;
-                }
-            }
-
-            CbFileList.Items.Clear();
-            BtnExport.Enabled = true;
-
-            foreach (string file in filesPath)
-            {
-                string fileName = file.Split('\\').Last();
-
-                if (fileName == "main.cpp" || fileName == "Main.cpp")
-                {
-                    continue;
-                }
-
-                CbFileList.Items.Add(fileName, true);
-            }
-        }
-#endif
 
         private void CbFileList_MouseDown(object sender, MouseEventArgs e)
         {
