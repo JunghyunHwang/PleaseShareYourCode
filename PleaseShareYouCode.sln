@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PleaseShareYouCode", "PleaseShareYouCode.csproj", "{0CD32A62-6320-4892-BCBB-509AAD944F31}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PleaseShareYourCode", "PleaseShareYourCode.csproj", "{0CD32A62-6320-4892-BCBB-509AAD944F31}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "PleaseShareYourCodeSetup", "..\PleaseShareYourCodeSetup\PleaseShareYourCodeSetup.vdproj", "{C61747BA-1D7C-4470-A9C6-505BE137A84D}"
 EndProject

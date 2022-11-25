@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using PleaseShareYourCode;
+using System.Diagnostics;
+using System.Xml.Linq;
 
 namespace PleaseShareYouCode
 {
@@ -17,63 +19,45 @@ namespace PleaseShareYouCode
         private string directoryPath;
         private bool bIsMouseDown = false;
         private bool bIsDragAndDrop = false;
+        private List<string> files;
+
+        enum eLanguage
+        {
+            CS,
+            JAVA,
+            C,
+            CPP
+        }
 
         public PSYC()
         {
             InitializeComponent();
+            Setup();
+            files = new List<string>(64);
         }
 
-        private List<string> GetFiles()
+        private void Setup()
         {
-            List<string> allFiles = new List<string>(64);
-            bool bHasHeaderFile = false;
+            string settingPath = Directory.GetCurrentDirectory() + "\\" + "setting.txt";
+            string[] lines = File.ReadAllLines(settingPath);
+            string languageSetting = lines[0].Split('=').Last();
 
-            if (r_btnCS.Checked == true)
+            if (languageSetting == "cs")
             {
-                string tempDirectoryPath = directoryPath + "\\" + directoryPath.Split('\\').Last();
-                allFiles.AddRange(Directory.EnumerateFiles(tempDirectoryPath, "*.*", SearchOption.TopDirectoryOnly)
-            .Where(s => s.EndsWith(".cs") && !s.EndsWith("Program.cs")));
+                r_btnCS.Checked = true;
             }
-            else if (r_btnJAVA.Checked == true)
+            else if (languageSetting == "java")
             {
-                allFiles.AddRange(Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
-            .Where(s => s.EndsWith(".java") && !s.EndsWith("Program.java")));
+                r_btnJAVA.Checked = true;
             }
-            else if (r_btnC.Checked == true)
+            else if (languageSetting == "c")
             {
-                allFiles.AddRange(Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
-            .Where(s => s.EndsWith(".h") || s.EndsWith(".c") && !s.EndsWith("main.c")));
-                bHasHeaderFile = true;
+                r_btnC.Checked = true;
             }
-            else
+            else if (languageSetting == "cpp")
             {
-                allFiles.AddRange(Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
-            .Where(s => s.EndsWith(".h") || s.EndsWith(".cpp") && !s.EndsWith("main.cpp")));
-                bHasHeaderFile = true;
+                r_btnCPP.Checked = true;
             }
-
-            if (allFiles.Count == 0)
-            {
-                return allFiles;
-            }
-
-            if (bHasHeaderFile)
-            {
-                for (int i = 0; i < allFiles.Count - 1; i++)
-                {
-                    string fileName = allFiles[i].Split('.').First();
-                    string nextFileName = allFiles[i + 1].Split('.').First();
-
-                    if (fileName == nextFileName)
-                    {
-                        string temp = allFiles[i];
-                        allFiles[i] = allFiles[i + 1];
-                        allFiles[i + 1] = temp;
-                    }
-                }
-            }
-
-            return allFiles;
         }
 
         private void BtnOpen_Click(object sender, EventArgs e)
@@ -88,17 +72,59 @@ namespace PleaseShareYouCode
             directoryPath = folderBrowserDialog1.SelectedPath;
             labelProject.Text = "";
 
-            List<string> files = GetFiles();
+            files.Clear();
+            bool bHasHeaderFile = false;
+
+            if (r_btnCS.Checked == true)
+            {
+                files.AddRange(Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
+            .Where(s => !s.EndsWith("Program.cs") && !s.EndsWith("AssemblyAttributes.cs") && !s.EndsWith("AssemblyInfo.cs") && s.EndsWith(".cs")));
+            }
+            else if (r_btnJAVA.Checked == true)
+            {
+                files.AddRange(Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
+            .Where(s => !s.EndsWith("Program.java") && !s.EndsWith("App.java") && !s.EndsWith("Registry.java") && !s.EndsWith("Interface.java") && !s.EndsWith("InterfaceKey.java") && s.EndsWith(".java")));
+            }
+            else if (r_btnC.Checked == true)
+            {
+                files.AddRange(Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
+            .Where(s => s.EndsWith(".h") || s.EndsWith(".c") && !s.EndsWith("main.c")));
+                bHasHeaderFile = true;
+            }
+            else
+            {
+                files.AddRange(Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
+            .Where(s => s.EndsWith(".h") || s.EndsWith(".cpp") && !s.EndsWith("main.cpp")));
+                bHasHeaderFile = true;
+            }
 
             if (files.Count == 0)
             {
                 MessageBox.Show("해당 언어로 파일을 찾을 수 없습니다.", "Message");
+                folderBrowserDialog1.SelectedPath = "";
                 return;
+            }
+
+            if (bHasHeaderFile)
+            {
+                for (int i = 0; i < files.Count - 1; i++)
+                {
+                    string fileName = files[i].Split('.').First();
+                    string nextFileName = files[i + 1].Split('.').First();
+                    
+                    if (fileName == nextFileName)
+                    {
+                        string temp = files[i];
+                        files[i] = files[i + 1];
+                        files[i + 1] = temp;
+                    }
+                }
             }
 
             labelProject.Text = directoryPath.Split('\\').Last();
             CbFileList.Items.Clear();
             BtnExport.Enabled = true;
+            folderBrowserDialog1.SelectedPath = "";
 
             foreach (string f in files)
             {
@@ -124,6 +150,7 @@ namespace PleaseShareYouCode
                 return;
             }
 
+            BtnExport.Enabled = false;
             StringBuilder sbFilePath = new StringBuilder(256);
             StringBuilder sbComment = new StringBuilder(256);
             List<string> failFiles = new List<string>(CbFileList.Items.Count);
@@ -135,12 +162,12 @@ namespace PleaseShareYouCode
                 if (CbFileList.GetItemChecked(i) == true)
                 {
                     string fileName = CbFileList.Items[i].ToString();
-
+                    
                     sbComment.Clear();
                     sbFilePath.Clear();
 
                     sbComment.Append("//").Append(DIVIDING_LINE).Append(fileName).Append(DIVIDING_LINE);
-                    sbFilePath.Append(directoryPath).Append('\\').Append(fileName);
+                    sbFilePath.Append(files.Find(f => f.EndsWith(fileName)));
 
                     try
                     {
@@ -188,12 +215,10 @@ namespace PleaseShareYouCode
             else
             {
                 MessageBox.Show("추출 완료!", "Message");
-                System.Diagnostics.Process.Start(saveFileDialog1.FileName);
+                Process.Start(saveFileDialog1.FileName);
             }
 
-
             CbFileList.Items.Clear();
-            BtnExport.Enabled = false;
             labelProject.Text = "";
         }
 
@@ -254,6 +279,64 @@ namespace PleaseShareYouCode
         {
             Console.WriteLine("Start DragOver");
             e.Effect = DragDropEffects.Move;
+        }
+
+        private void SetDefaultLanguageCS_Click(object sender, EventArgs e)
+        {
+            r_btnCS.Checked = true;
+            SetDefaultLanguage(eLanguage.CS);
+            MessageBox.Show("기본 언어가 C#로 설정되었습니다.", "Message");
+        }
+
+        private void SetDefaultLanguageJava_Click(object sender, EventArgs e)
+        {
+            r_btnJAVA.Checked = true;
+            SetDefaultLanguage(eLanguage.JAVA);
+            MessageBox.Show("기본 언어가 Java로 설정되었습니다.", "Message");
+        }
+
+        private void SetDefaultLanguageC_Click(object sender, EventArgs e)
+        {
+            r_btnC.Checked = true;
+            SetDefaultLanguage(eLanguage.C);
+            MessageBox.Show("기본 언어가 C로 설정되었습니다.", "Message");
+        }
+
+        private void SetDefaultLanguageCpp_Click(object sender, EventArgs e)
+        {
+            r_btnCPP.Checked = true;
+            SetDefaultLanguage(eLanguage.CPP);
+            MessageBox.Show("기본 언어가 C++로 설정되었습니다.", "Message");
+        }
+
+        private void SetDefaultLanguage(eLanguage language)
+        {
+            string settingPath = Directory.GetCurrentDirectory() + "\\" + "setting.txt";
+            string defaultLanguage = "";
+
+            switch (language)
+            {
+                case eLanguage.CS:
+                    defaultLanguage = "Language=cs";
+                    break;
+                case eLanguage.JAVA:
+                    defaultLanguage = "Language=java";
+                    break;
+                case eLanguage.C:
+                    defaultLanguage = "Language=c";
+                    break;
+                case eLanguage.CPP:
+                    defaultLanguage = "Language=cpp";
+                    break;
+                default:
+                    Debug.Assert(false);
+                    break;
+            }
+
+            using (StreamWriter writer = new StreamWriter(File.Open(settingPath, FileMode.Truncate))) 
+            {
+                writer.WriteLine(defaultLanguage);
+            }
         }
     }
 }
