@@ -8,4 +8,4 @@ POCU의 과목을 진행 할 수록 실습/과제 파일이 많아져 코드 공
 프로젝트 폴더를 선택하면 선택한 언어의 모든 파일들을 가져와 txt 파일로 추출해 줍니다.  
 자세한 사용방법은 아래 문서를 참고해주세요
 
-[PSYC 프로그램 설치 및 사용]([https://docs.google.com/document/d/1htU20ynckoBCVjZoKyCZ85lWflPBinkvCr9ORYsy4OM/edit](https://docs.google.com/document/d/1htU20ynckoBCVjZoKyCZ85lWflPBinkvCr9ORYsy4OM/edit)) - by oakmura
+[PSYC 프로그램 설치 및 사용](https://docs.google.com/document/d/1htU20ynckoBCVjZoKyCZ85lWflPBinkvCr9ORYsy4OM/edit) - by oakmura
