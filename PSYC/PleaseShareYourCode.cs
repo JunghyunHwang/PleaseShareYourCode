@@ -1,16 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using PleaseShareYourCode;
 using System.Diagnostics;
-using System.Xml.Linq;
 
 namespace PleaseShareYouCode
 {
@@ -73,7 +69,6 @@ namespace PleaseShareYouCode
             labelProject.Text = "";
 
             files.Clear();
-            bool bHasHeaderFile = false;
 
             if (r_btnCS.Checked == true)
             {
@@ -89,13 +84,13 @@ namespace PleaseShareYouCode
             {
                 files.AddRange(Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
             .Where(s => s.EndsWith(".h") || s.EndsWith(".c") && !s.EndsWith("main.c")));
-                bHasHeaderFile = true;
+                ReorderCppAndHeader(files);
             }
             else
             {
                 files.AddRange(Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
             .Where(s => s.EndsWith(".h") || s.EndsWith(".cpp") && !s.EndsWith("main.cpp")));
-                bHasHeaderFile = true;
+                ReorderCppAndHeader(files);
             }
 
             if (files.Count == 0)
@@ -103,22 +98,6 @@ namespace PleaseShareYouCode
                 MessageBox.Show("해당 언어로 파일을 찾을 수 없습니다.", "Message");
                 folderBrowserDialog1.SelectedPath = "";
                 return;
-            }
-
-            if (bHasHeaderFile)
-            {
-                for (int i = 0; i < files.Count - 1; i++)
-                {
-                    string fileName = files[i].Split('.').First();
-                    string nextFileName = files[i + 1].Split('.').First();
-                    
-                    if (fileName == nextFileName)
-                    {
-                        string temp = files[i];
-                        files[i] = files[i + 1];
-                        files[i + 1] = temp;
-                    }
-                }
             }
 
             labelProject.Text = directoryPath.Split('\\').Last();
@@ -156,7 +135,8 @@ namespace PleaseShareYouCode
             List<string> failFiles = new List<string>(CbFileList.Items.Count);
 
             const string DIVIDING_LINE = "----------------------";
-            
+            StreamWriter writer = new StreamWriter(File.Open(saveFileDialog1.FileName, FileMode.Create));
+
             for (int i = 0; i < CbFileList.Items.Count; ++i)
             {
                 if (CbFileList.GetItemChecked(i) == true)
@@ -172,16 +152,13 @@ namespace PleaseShareYouCode
                     try
                     {
                         using (StreamReader reader = new StreamReader(File.Open(sbFilePath.ToString(), FileMode.Open)))
-                        using (StreamWriter writer = new StreamWriter(File.Open(saveFileDialog1.FileName, FileMode.Append)))
                         {
                             writer.WriteLine(sbComment.ToString());
                             writer.WriteLine();
 
                             while (!reader.EndOfStream)
                             {
-                                string line = reader.ReadLine();
-
-                                writer.WriteLine(line);
+                                writer.WriteLine(reader.ReadLine());
                             }
 
                             writer.WriteLine();
@@ -195,6 +172,8 @@ namespace PleaseShareYouCode
                     }
                 }
             }
+
+            writer.Close();
 
             if (failFiles.Count > 0)
             {
@@ -336,6 +315,22 @@ namespace PleaseShareYouCode
             using (StreamWriter writer = new StreamWriter(File.Open(settingPath, FileMode.Truncate))) 
             {
                 writer.WriteLine(defaultLanguage);
+            }
+        }
+
+        private void ReorderCppAndHeader(List<string> files)
+        {
+            for (int i = 0; i < files.Count - 1; i++)
+            {
+                string fileName = files[i].Split('.').First();
+                string nextFileName = files[i + 1].Split('.').First();
+
+                if (fileName == nextFileName)
+                {
+                    string temp = files[i];
+                    files[i] = files[i + 1];
+                    files[i + 1] = temp;
+                }
             }
         }
     }
