@@ -22,7 +22,8 @@ namespace PleaseShareYouCode
             CS,
             JAVA,
             C,
-            CPP
+            CPP,
+            ASM
         }
 
         public PSYC()
@@ -38,21 +39,26 @@ namespace PleaseShareYouCode
             string[] lines = File.ReadAllLines(settingPath);
             string languageSetting = lines[0].Split('=').Last();
 
-            if (languageSetting == "cs")
+            switch (languageSetting)
             {
-                r_btnCS.Checked = true;
-            }
-            else if (languageSetting == "java")
-            {
-                r_btnJAVA.Checked = true;
-            }
-            else if (languageSetting == "c")
-            {
-                r_btnC.Checked = true;
-            }
-            else if (languageSetting == "cpp")
-            {
-                r_btnCPP.Checked = true;
+                case "cs":
+                    r_btnCS.Checked = true;
+                    break;
+                case "java":
+                   r_btnJAVA.Checked = true;
+                    break;
+                case "c":
+                    r_btnC.Checked = true;
+                    break;
+                case "cpp":
+                    r_btnCPP.Checked = true;
+                    break;
+                case "asm":
+                    r_btnAsm.Checked = true;
+                    break;
+                default:
+                    Debug.Assert(false, "Unknown language");
+                    break;
             }
         }
 
@@ -70,27 +76,32 @@ namespace PleaseShareYouCode
 
             files.Clear();
 
-            if (r_btnCS.Checked == true)
+            if (r_btnCS.Checked)
             {
                 files.AddRange(Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
-            .Where(s => !s.EndsWith("Program.cs") && !s.EndsWith("AssemblyAttributes.cs") && !s.EndsWith("AssemblyInfo.cs") && s.EndsWith(".cs")));
+                    .Where(s => !s.EndsWith("Program.cs") && !s.EndsWith("AssemblyAttributes.cs") && !s.EndsWith("AssemblyInfo.cs") && s.EndsWith(".cs")));
             }
-            else if (r_btnJAVA.Checked == true)
+            else if (r_btnJAVA.Checked)
             {
                 files.AddRange(Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
-            .Where(s => !s.EndsWith("Program.java") && !s.EndsWith("App.java") && !s.EndsWith("Registry.java") && !s.EndsWith("Interface.java") && !s.EndsWith("InterfaceKey.java") && s.EndsWith(".java")));
+                    .Where(s => !s.EndsWith("Program.java") && !s.EndsWith("App.java") && !s.EndsWith("Registry.java") && !s.EndsWith("Interface.java") && !s.EndsWith("InterfaceKey.java") && s.EndsWith(".java")));
             }
-            else if (r_btnC.Checked == true)
+            else if (r_btnC.Checked)
             {
                 files.AddRange(Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
-            .Where(s => s.EndsWith(".h") || s.EndsWith(".c") && !s.EndsWith("main.c")));
-                ReorderCppAndHeader(files);
+                    .Where(s => s.EndsWith(".h") || s.EndsWith(".c") && !s.EndsWith("main.c")));
+                ReorderHeader(files);
+            }
+            else if (r_btnCPP.Checked)
+            {
+                files.AddRange(Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
+                    .Where(s => s.EndsWith(".h") || s.EndsWith(".cpp") && !s.EndsWith("main.cpp")));
+                ReorderHeader(files);
             }
             else
             {
                 files.AddRange(Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
-            .Where(s => s.EndsWith(".h") || s.EndsWith(".cpp") && !s.EndsWith("main.cpp")));
-                ReorderCppAndHeader(files);
+                    .Where(s => !s.EndsWith("utils.asm") && !s.EndsWith("_main.asm") && s.EndsWith(".asm") || s.EndsWith(".inc")));
             }
 
             if (files.Count == 0)
@@ -136,6 +147,7 @@ namespace PleaseShareYouCode
 
             const string DIVIDING_LINE = "----------------------";
             StreamWriter writer = new StreamWriter(File.Open(saveFileDialog1.FileName, FileMode.Create));
+            string commentStartStr = r_btnAsm.Checked ? ";" : "//";
 
             for (int i = 0; i < CbFileList.Items.Count; ++i)
             {
@@ -146,7 +158,7 @@ namespace PleaseShareYouCode
                     sbComment.Clear();
                     sbFilePath.Clear();
 
-                    sbComment.Append("//").Append(DIVIDING_LINE).Append(fileName).Append(DIVIDING_LINE);
+                    sbComment.Append(commentStartStr).Append(DIVIDING_LINE).Append(fileName).Append(DIVIDING_LINE);
                     sbFilePath.Append(files.Find(f => f.EndsWith(fileName)));
 
                     try
@@ -288,6 +300,13 @@ namespace PleaseShareYouCode
             MessageBox.Show("기본 언어가 C++로 설정되었습니다.", "Message");
         }
 
+        private void SetDefaultLanguageAsm_Click(object sender, EventArgs e)
+        {
+            r_btnAsm.Checked = true;
+            SetDefaultLanguage(eLanguage.ASM);
+            MessageBox.Show("기본 언어가 Assembly로 설정되었습니다.", "Message");
+        }
+
         private void SetDefaultLanguage(eLanguage language)
         {
             string settingPath = Directory.GetCurrentDirectory() + "\\" + "setting.txt";
@@ -307,8 +326,11 @@ namespace PleaseShareYouCode
                 case eLanguage.CPP:
                     defaultLanguage = "Language=cpp";
                     break;
+                case eLanguage.ASM:
+                    defaultLanguage = "Language=asm";
+                    break;
                 default:
-                    Debug.Assert(false);
+                    Debug.Assert(false , "Unknown language");
                     break;
             }
 
@@ -318,7 +340,7 @@ namespace PleaseShareYouCode
             }
         }
 
-        private void ReorderCppAndHeader(List<string> files)
+        private void ReorderHeader(List<string> files)
         {
             for (int i = 0; i < files.Count - 1; i++)
             {

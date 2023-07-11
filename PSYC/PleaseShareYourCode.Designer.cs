@@ -45,6 +45,7 @@ namespace PleaseShareYouCode
             this.r_btnC = new System.Windows.Forms.RadioButton();
             this.r_btnCPP = new System.Windows.Forms.RadioButton();
             this.g_boxLanguage = new System.Windows.Forms.GroupBox();
+            this.r_btnAsm = new System.Windows.Forms.RadioButton();
             this.labelProject = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.setting = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,6 +54,7 @@ namespace PleaseShareYouCode
             this.javaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cppToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.assemblyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.g_boxLanguage.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -82,7 +84,7 @@ namespace PleaseShareYouCode
             // 
             this.CbFileList.AllowDrop = true;
             this.CbFileList.CheckOnClick = true;
-            this.CbFileList.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.CbFileList.Font = new System.Drawing.Font("Gulim", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.CbFileList.FormattingEnabled = true;
             this.CbFileList.Location = new System.Drawing.Point(33, 66);
             this.CbFileList.Name = "CbFileList";
@@ -97,7 +99,7 @@ namespace PleaseShareYouCode
             // r_btnCS
             // 
             this.r_btnCS.AutoSize = true;
-            this.r_btnCS.Location = new System.Drawing.Point(29, 53);
+            this.r_btnCS.Location = new System.Drawing.Point(29, 46);
             this.r_btnCS.Name = "r_btnCS";
             this.r_btnCS.Size = new System.Drawing.Size(46, 19);
             this.r_btnCS.TabIndex = 5;
@@ -108,7 +110,7 @@ namespace PleaseShareYouCode
             // r_btnJAVA
             // 
             this.r_btnJAVA.AutoSize = true;
-            this.r_btnJAVA.Location = new System.Drawing.Point(29, 78);
+            this.r_btnJAVA.Location = new System.Drawing.Point(29, 71);
             this.r_btnJAVA.Name = "r_btnJAVA";
             this.r_btnJAVA.Size = new System.Drawing.Size(58, 19);
             this.r_btnJAVA.TabIndex = 6;
@@ -118,7 +120,7 @@ namespace PleaseShareYouCode
             // r_btnC
             // 
             this.r_btnC.AutoSize = true;
-            this.r_btnC.Location = new System.Drawing.Point(29, 103);
+            this.r_btnC.Location = new System.Drawing.Point(29, 96);
             this.r_btnC.Name = "r_btnC";
             this.r_btnC.Size = new System.Drawing.Size(38, 19);
             this.r_btnC.TabIndex = 7;
@@ -128,7 +130,7 @@ namespace PleaseShareYouCode
             // r_btnCPP
             // 
             this.r_btnCPP.AutoSize = true;
-            this.r_btnCPP.Location = new System.Drawing.Point(29, 128);
+            this.r_btnCPP.Location = new System.Drawing.Point(29, 121);
             this.r_btnCPP.Name = "r_btnCPP";
             this.r_btnCPP.Size = new System.Drawing.Size(54, 19);
             this.r_btnCPP.TabIndex = 8;
@@ -138,6 +140,7 @@ namespace PleaseShareYouCode
             // 
             // g_boxLanguage
             // 
+            this.g_boxLanguage.Controls.Add(this.r_btnAsm);
             this.g_boxLanguage.Controls.Add(this.r_btnJAVA);
             this.g_boxLanguage.Controls.Add(this.r_btnCPP);
             this.g_boxLanguage.Controls.Add(this.r_btnCS);
@@ -148,6 +151,17 @@ namespace PleaseShareYouCode
             this.g_boxLanguage.TabIndex = 9;
             this.g_boxLanguage.TabStop = false;
             this.g_boxLanguage.Text = "Language";
+            // 
+            // r_btnAsm
+            // 
+            this.r_btnAsm.AutoSize = true;
+            this.r_btnAsm.Location = new System.Drawing.Point(29, 146);
+            this.r_btnAsm.Name = "r_btnAsm";
+            this.r_btnAsm.Size = new System.Drawing.Size(91, 19);
+            this.r_btnAsm.TabIndex = 9;
+            this.r_btnAsm.TabStop = true;
+            this.r_btnAsm.Text = "Assembly";
+            this.r_btnAsm.UseVisualStyleBackColor = true;
             // 
             // labelProject
             // 
@@ -183,38 +197,46 @@ namespace PleaseShareYouCode
             this.csToolStripMenuItem,
             this.javaToolStripMenuItem,
             this.cToolStripMenuItem,
-            this.cppToolStripMenuItem});
+            this.cppToolStripMenuItem,
+            this.assemblyToolStripMenuItem});
             this.DefaultLanguageToolStripMenuItem.Name = "DefaultLanguageToolStripMenuItem";
-            this.DefaultLanguageToolStripMenuItem.Size = new System.Drawing.Size(192, 26);
+            this.DefaultLanguageToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.DefaultLanguageToolStripMenuItem.Text = "기본 언어 설정";
             // 
             // csToolStripMenuItem
             // 
             this.csToolStripMenuItem.Name = "csToolStripMenuItem";
-            this.csToolStripMenuItem.Size = new System.Drawing.Size(124, 26);
+            this.csToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.csToolStripMenuItem.Text = "C#";
             this.csToolStripMenuItem.Click += new System.EventHandler(this.SetDefaultLanguageCS_Click);
             // 
             // javaToolStripMenuItem
             // 
             this.javaToolStripMenuItem.Name = "javaToolStripMenuItem";
-            this.javaToolStripMenuItem.Size = new System.Drawing.Size(124, 26);
+            this.javaToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.javaToolStripMenuItem.Text = "Java";
             this.javaToolStripMenuItem.Click += new System.EventHandler(this.SetDefaultLanguageJava_Click);
             // 
             // cToolStripMenuItem
             // 
             this.cToolStripMenuItem.Name = "cToolStripMenuItem";
-            this.cToolStripMenuItem.Size = new System.Drawing.Size(124, 26);
+            this.cToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.cToolStripMenuItem.Text = "C";
             this.cToolStripMenuItem.Click += new System.EventHandler(this.SetDefaultLanguageC_Click);
             // 
             // cppToolStripMenuItem
             // 
             this.cppToolStripMenuItem.Name = "cppToolStripMenuItem";
-            this.cppToolStripMenuItem.Size = new System.Drawing.Size(124, 26);
+            this.cppToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.cppToolStripMenuItem.Text = "C++";
             this.cppToolStripMenuItem.Click += new System.EventHandler(this.SetDefaultLanguageCpp_Click);
+            // 
+            // assemblyToolStripMenuItem
+            // 
+            this.assemblyToolStripMenuItem.Name = "assemblyToolStripMenuItem";
+            this.assemblyToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.assemblyToolStripMenuItem.Text = "Assembly";
+            this.assemblyToolStripMenuItem.Click += new System.EventHandler(this.SetDefaultLanguageAsm_Click);
             // 
             // PSYC
             // 
@@ -261,6 +283,8 @@ namespace PleaseShareYouCode
         private ToolStripMenuItem javaToolStripMenuItem;
         private ToolStripMenuItem cToolStripMenuItem;
         private ToolStripMenuItem cppToolStripMenuItem;
+        private RadioButton r_btnAsm;
+        private ToolStripMenuItem assemblyToolStripMenuItem;
     }
 }
 
