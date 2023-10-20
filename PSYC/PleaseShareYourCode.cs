@@ -425,3 +425,7 @@ namespace PleaseShareYouCode
 		}
 	}
 }
+
+// bug list
+// 파일 리스트 순서 바꿀시 이상하게 나오는 버그
+// 인코딩 버그
