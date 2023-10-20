@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PleaseShareYourCode.PSYC
 {
-	internal class JsonParser
+	public class JsonParser
 	{
 		public static string Serialize<T>(T obj)
 		{

@@ -34,32 +34,39 @@ namespace PleaseShareYouCode
         /// </summary>
         private void InitializeComponent()
         {
+			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PSYC));
 			this.BtnOpen = new System.Windows.Forms.Button();
 			this.BtnCombine = new System.Windows.Forms.Button();
 			this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
 			this.CbFileList = new System.Windows.Forms.CheckedListBox();
 			this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-			this.r_btnCS = new System.Windows.Forms.RadioButton();
-			this.r_btnJAVA = new System.Windows.Forms.RadioButton();
-			this.r_btnC = new System.Windows.Forms.RadioButton();
-			this.r_btnCPP = new System.Windows.Forms.RadioButton();
+			this.r_BtnCS = new System.Windows.Forms.RadioButton();
+			this.r_BtnJAVA = new System.Windows.Forms.RadioButton();
+			this.r_BtnC = new System.Windows.Forms.RadioButton();
+			this.r_BtnCPP = new System.Windows.Forms.RadioButton();
 			this.g_boxLanguage = new System.Windows.Forms.GroupBox();
-			this.r_btnAsm = new System.Windows.Forms.RadioButton();
+			this.r_BtnASM = new System.Windows.Forms.RadioButton();
 			this.labelProject = new System.Windows.Forms.Label();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.r_BtnASCII = new System.Windows.Forms.RadioButton();
+			this.r_BtnUTF8 = new System.Windows.Forms.RadioButton();
+			this.r_BtnDefault = new System.Windows.Forms.RadioButton();
 			this.label1 = new System.Windows.Forms.Label();
-			this.radioButton1 = new System.Windows.Forms.RadioButton();
-			this.radioButton2 = new System.Windows.Forms.RadioButton();
-			this.radioButton3 = new System.Windows.Forms.RadioButton();
+			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.labelDivideLine = new System.Windows.Forms.Label();
+			this.textBoxDivideLine = new System.Windows.Forms.TextBox();
+			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+			this.BtnHelp = new System.Windows.Forms.Button();
 			this.g_boxLanguage.SuspendLayout();
 			this.groupBox1.SuspendLayout();
+			this.groupBox2.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// BtnOpen
 			// 
 			this.BtnOpen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.BtnOpen.Location = new System.Drawing.Point(451, 317);
+			this.BtnOpen.Location = new System.Drawing.Point(438, 381);
 			this.BtnOpen.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
 			this.BtnOpen.Name = "BtnOpen";
 			this.BtnOpen.Size = new System.Drawing.Size(88, 26);
@@ -72,7 +79,7 @@ namespace PleaseShareYouCode
 			// 
 			this.BtnCombine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.BtnCombine.Enabled = false;
-			this.BtnCombine.Location = new System.Drawing.Point(451, 347);
+			this.BtnCombine.Location = new System.Drawing.Point(438, 411);
 			this.BtnCombine.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
 			this.BtnCombine.Name = "BtnCombine";
 			this.BtnCombine.Size = new System.Drawing.Size(88, 26);
@@ -93,7 +100,7 @@ namespace PleaseShareYouCode
 			this.CbFileList.Location = new System.Drawing.Point(12, 33);
 			this.CbFileList.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
 			this.CbFileList.Name = "CbFileList";
-			this.CbFileList.Size = new System.Drawing.Size(408, 340);
+			this.CbFileList.Size = new System.Drawing.Size(375, 404);
 			this.CbFileList.TabIndex = 3;
 			this.CbFileList.DragDrop += new System.Windows.Forms.DragEventHandler(this.CbFileList_DragDrop);
 			this.CbFileList.DragOver += new System.Windows.Forms.DragEventHandler(this.CbFileList_DragOver);
@@ -101,155 +108,199 @@ namespace PleaseShareYouCode
 			this.CbFileList.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CbFileList_MouseMove);
 			this.CbFileList.MouseUp += new System.Windows.Forms.MouseEventHandler(this.CbFileList_MouseUp);
 			// 
-			// r_btnCS
+			// r_BtnCS
 			// 
-			this.r_btnCS.AutoSize = true;
-			this.r_btnCS.Location = new System.Drawing.Point(25, 77);
-			this.r_btnCS.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-			this.r_btnCS.Name = "r_btnCS";
-			this.r_btnCS.Size = new System.Drawing.Size(38, 16);
-			this.r_btnCS.TabIndex = 5;
-			this.r_btnCS.TabStop = true;
-			this.r_btnCS.Text = "C#";
-			this.r_btnCS.UseVisualStyleBackColor = true;
-			this.r_btnCS.CheckedChanged += new System.EventHandler(this.r_btn_CheckedChanged);
+			this.r_BtnCS.AutoSize = true;
+			this.r_BtnCS.Location = new System.Drawing.Point(25, 58);
+			this.r_BtnCS.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+			this.r_BtnCS.Name = "r_BtnCS";
+			this.r_BtnCS.Size = new System.Drawing.Size(38, 16);
+			this.r_BtnCS.TabIndex = 5;
+			this.r_BtnCS.TabStop = true;
+			this.r_BtnCS.Text = "C#";
+			this.r_BtnCS.UseVisualStyleBackColor = true;
+			this.r_BtnCS.CheckedChanged += new System.EventHandler(this.r_BtnLanguage_CheckedChanged);
 			// 
-			// r_btnJAVA
+			// r_BtnJAVA
 			// 
-			this.r_btnJAVA.AutoSize = true;
-			this.r_btnJAVA.Location = new System.Drawing.Point(25, 97);
-			this.r_btnJAVA.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-			this.r_btnJAVA.Name = "r_btnJAVA";
-			this.r_btnJAVA.Size = new System.Drawing.Size(49, 16);
-			this.r_btnJAVA.TabIndex = 6;
-			this.r_btnJAVA.Text = "Java";
-			this.r_btnJAVA.UseVisualStyleBackColor = true;
-			this.r_btnJAVA.CheckedChanged += new System.EventHandler(this.r_btn_CheckedChanged);
+			this.r_BtnJAVA.AutoSize = true;
+			this.r_BtnJAVA.Location = new System.Drawing.Point(25, 78);
+			this.r_BtnJAVA.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+			this.r_BtnJAVA.Name = "r_BtnJAVA";
+			this.r_BtnJAVA.Size = new System.Drawing.Size(49, 16);
+			this.r_BtnJAVA.TabIndex = 6;
+			this.r_BtnJAVA.Text = "Java";
+			this.r_BtnJAVA.UseVisualStyleBackColor = true;
+			this.r_BtnJAVA.CheckedChanged += new System.EventHandler(this.r_BtnLanguage_CheckedChanged);
 			// 
-			// r_btnC
+			// r_BtnC
 			// 
-			this.r_btnC.AutoSize = true;
-			this.r_btnC.Location = new System.Drawing.Point(25, 37);
-			this.r_btnC.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-			this.r_btnC.Name = "r_btnC";
-			this.r_btnC.Size = new System.Drawing.Size(32, 16);
-			this.r_btnC.TabIndex = 7;
-			this.r_btnC.Text = "C";
-			this.r_btnC.UseVisualStyleBackColor = true;
-			this.r_btnC.CheckedChanged += new System.EventHandler(this.r_btn_CheckedChanged);
+			this.r_BtnC.AutoSize = true;
+			this.r_BtnC.Location = new System.Drawing.Point(25, 18);
+			this.r_BtnC.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+			this.r_BtnC.Name = "r_BtnC";
+			this.r_BtnC.Size = new System.Drawing.Size(32, 16);
+			this.r_BtnC.TabIndex = 7;
+			this.r_BtnC.Text = "C";
+			this.r_BtnC.UseVisualStyleBackColor = true;
+			this.r_BtnC.CheckedChanged += new System.EventHandler(this.r_BtnLanguage_CheckedChanged);
 			// 
-			// r_btnCPP
+			// r_BtnCPP
 			// 
-			this.r_btnCPP.AutoSize = true;
-			this.r_btnCPP.Location = new System.Drawing.Point(25, 57);
-			this.r_btnCPP.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-			this.r_btnCPP.Name = "r_btnCPP";
-			this.r_btnCPP.Size = new System.Drawing.Size(44, 16);
-			this.r_btnCPP.TabIndex = 8;
-			this.r_btnCPP.TabStop = true;
-			this.r_btnCPP.Text = "C++";
-			this.r_btnCPP.UseVisualStyleBackColor = true;
-			this.r_btnCPP.CheckedChanged += new System.EventHandler(this.r_btn_CheckedChanged);
+			this.r_BtnCPP.AutoSize = true;
+			this.r_BtnCPP.Location = new System.Drawing.Point(25, 38);
+			this.r_BtnCPP.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+			this.r_BtnCPP.Name = "r_BtnCPP";
+			this.r_BtnCPP.Size = new System.Drawing.Size(44, 16);
+			this.r_BtnCPP.TabIndex = 8;
+			this.r_BtnCPP.TabStop = true;
+			this.r_BtnCPP.Text = "C++";
+			this.r_BtnCPP.UseVisualStyleBackColor = true;
+			this.r_BtnCPP.CheckedChanged += new System.EventHandler(this.r_BtnLanguage_CheckedChanged);
 			// 
 			// g_boxLanguage
 			// 
 			this.g_boxLanguage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.g_boxLanguage.Controls.Add(this.r_btnAsm);
-			this.g_boxLanguage.Controls.Add(this.r_btnJAVA);
-			this.g_boxLanguage.Controls.Add(this.r_btnCPP);
-			this.g_boxLanguage.Controls.Add(this.r_btnCS);
-			this.g_boxLanguage.Controls.Add(this.r_btnC);
-			this.g_boxLanguage.Location = new System.Drawing.Point(426, 26);
+			this.g_boxLanguage.Controls.Add(this.r_BtnASM);
+			this.g_boxLanguage.Controls.Add(this.r_BtnJAVA);
+			this.g_boxLanguage.Controls.Add(this.r_BtnCPP);
+			this.g_boxLanguage.Controls.Add(this.r_BtnCS);
+			this.g_boxLanguage.Controls.Add(this.r_BtnC);
+			this.g_boxLanguage.Location = new System.Drawing.Point(393, 26);
 			this.g_boxLanguage.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
 			this.g_boxLanguage.Name = "g_boxLanguage";
 			this.g_boxLanguage.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-			this.g_boxLanguage.Size = new System.Drawing.Size(139, 155);
+			this.g_boxLanguage.Size = new System.Drawing.Size(172, 124);
 			this.g_boxLanguage.TabIndex = 9;
 			this.g_boxLanguage.TabStop = false;
 			this.g_boxLanguage.Text = "Language";
 			// 
-			// r_btnAsm
+			// r_BtnASM
 			// 
-			this.r_btnAsm.AutoSize = true;
-			this.r_btnAsm.Location = new System.Drawing.Point(25, 117);
-			this.r_btnAsm.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-			this.r_btnAsm.Name = "r_btnAsm";
-			this.r_btnAsm.Size = new System.Drawing.Size(80, 16);
-			this.r_btnAsm.TabIndex = 9;
-			this.r_btnAsm.TabStop = true;
-			this.r_btnAsm.Text = "Assembly";
-			this.r_btnAsm.UseVisualStyleBackColor = true;
-			this.r_btnAsm.CheckedChanged += new System.EventHandler(this.r_btn_CheckedChanged);
+			this.r_BtnASM.AutoSize = true;
+			this.r_BtnASM.Location = new System.Drawing.Point(25, 98);
+			this.r_BtnASM.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+			this.r_BtnASM.Name = "r_BtnASM";
+			this.r_BtnASM.Size = new System.Drawing.Size(80, 16);
+			this.r_BtnASM.TabIndex = 9;
+			this.r_BtnASM.TabStop = true;
+			this.r_BtnASM.Text = "Assembly";
+			this.r_BtnASM.UseVisualStyleBackColor = true;
+			this.r_BtnASM.CheckedChanged += new System.EventHandler(this.r_BtnLanguage_CheckedChanged);
 			// 
 			// labelProject
 			// 
 			this.labelProject.AutoSize = true;
-			this.labelProject.Location = new System.Drawing.Point(70, 9);
+			this.labelProject.Location = new System.Drawing.Point(66, 11);
 			this.labelProject.Name = "labelProject";
-			this.labelProject.Size = new System.Drawing.Size(0, 12);
+			this.labelProject.Size = new System.Drawing.Size(37, 12);
 			this.labelProject.TabIndex = 10;
+			this.labelProject.Text = "name";
 			// 
 			// groupBox1
 			// 
 			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.groupBox1.Controls.Add(this.radioButton3);
-			this.groupBox1.Controls.Add(this.radioButton2);
-			this.groupBox1.Controls.Add(this.radioButton1);
-			this.groupBox1.Location = new System.Drawing.Point(427, 187);
+			this.groupBox1.Controls.Add(this.r_BtnASCII);
+			this.groupBox1.Controls.Add(this.r_BtnUTF8);
+			this.groupBox1.Controls.Add(this.r_BtnDefault);
+			this.groupBox1.Location = new System.Drawing.Point(393, 155);
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(138, 95);
+			this.groupBox1.Size = new System.Drawing.Size(172, 91);
 			this.groupBox1.TabIndex = 12;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Encoding";
 			// 
+			// r_BtnASCII
+			// 
+			this.r_BtnASCII.AutoSize = true;
+			this.r_BtnASCII.Location = new System.Drawing.Point(24, 65);
+			this.r_BtnASCII.Name = "r_BtnASCII";
+			this.r_BtnASCII.Size = new System.Drawing.Size(54, 16);
+			this.r_BtnASCII.TabIndex = 2;
+			this.r_BtnASCII.TabStop = true;
+			this.r_BtnASCII.Text = "ASCII";
+			this.r_BtnASCII.UseVisualStyleBackColor = true;
+			this.r_BtnASCII.CheckedChanged += new System.EventHandler(this.r_BtnEncoding_CheckedChanged);
+			// 
+			// r_BtnUTF8
+			// 
+			this.r_BtnUTF8.AutoSize = true;
+			this.r_BtnUTF8.Location = new System.Drawing.Point(24, 43);
+			this.r_BtnUTF8.Name = "r_BtnUTF8";
+			this.r_BtnUTF8.Size = new System.Drawing.Size(52, 16);
+			this.r_BtnUTF8.TabIndex = 1;
+			this.r_BtnUTF8.TabStop = true;
+			this.r_BtnUTF8.Text = "UTF8";
+			this.r_BtnUTF8.UseVisualStyleBackColor = true;
+			this.r_BtnUTF8.CheckedChanged += new System.EventHandler(this.r_BtnEncoding_CheckedChanged);
+			// 
+			// r_BtnDefault
+			// 
+			this.r_BtnDefault.AutoSize = true;
+			this.r_BtnDefault.Location = new System.Drawing.Point(24, 20);
+			this.r_BtnDefault.Name = "r_BtnDefault";
+			this.r_BtnDefault.Size = new System.Drawing.Size(61, 16);
+			this.r_BtnDefault.TabIndex = 0;
+			this.r_BtnDefault.TabStop = true;
+			this.r_BtnDefault.Text = "Default";
+			this.r_BtnDefault.UseVisualStyleBackColor = true;
+			this.r_BtnDefault.CheckedChanged += new System.EventHandler(this.r_BtnEncoding_CheckedChanged);
+			// 
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(12, 9);
+			this.label1.Location = new System.Drawing.Point(10, 11);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(52, 12);
 			this.label1.TabIndex = 13;
 			this.label1.Text = "Project :";
 			// 
-			// radioButton1
+			// groupBox2
 			// 
-			this.radioButton1.AutoSize = true;
-			this.radioButton1.Location = new System.Drawing.Point(24, 21);
-			this.radioButton1.Name = "radioButton1";
-			this.radioButton1.Size = new System.Drawing.Size(61, 16);
-			this.radioButton1.TabIndex = 0;
-			this.radioButton1.TabStop = true;
-			this.radioButton1.Text = "Default";
-			this.radioButton1.UseVisualStyleBackColor = true;
-			this.radioButton1.CheckedChanged += new System.EventHandler(this.Encoding_radioButton_CheckedChanged);
+			this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox2.Controls.Add(this.labelDivideLine);
+			this.groupBox2.Controls.Add(this.textBoxDivideLine);
+			this.groupBox2.Location = new System.Drawing.Point(393, 252);
+			this.groupBox2.Name = "groupBox2";
+			this.groupBox2.Size = new System.Drawing.Size(172, 83);
+			this.groupBox2.TabIndex = 14;
+			this.groupBox2.TabStop = false;
+			this.groupBox2.Text = "Divide Line";
 			// 
-			// radioButton2
+			// labelDivideLine
 			// 
-			this.radioButton2.AutoSize = true;
-			this.radioButton2.Location = new System.Drawing.Point(24, 43);
-			this.radioButton2.Name = "radioButton2";
-			this.radioButton2.Size = new System.Drawing.Size(52, 16);
-			this.radioButton2.TabIndex = 1;
-			this.radioButton2.TabStop = true;
-			this.radioButton2.Text = "UTF8";
-			this.radioButton2.UseVisualStyleBackColor = true;
+			this.labelDivideLine.AutoSize = true;
+			this.labelDivideLine.Location = new System.Drawing.Point(11, 53);
+			this.labelDivideLine.Name = "labelDivideLine";
+			this.labelDivideLine.Size = new System.Drawing.Size(21, 12);
+			this.labelDivideLine.TabIndex = 1;
+			this.labelDivideLine.Text = "AA";
 			// 
-			// radioButton3
+			// textBoxDivideLine
 			// 
-			this.radioButton3.AutoSize = true;
-			this.radioButton3.Location = new System.Drawing.Point(24, 65);
-			this.radioButton3.Name = "radioButton3";
-			this.radioButton3.Size = new System.Drawing.Size(54, 16);
-			this.radioButton3.TabIndex = 2;
-			this.radioButton3.TabStop = true;
-			this.radioButton3.Text = "ASCII";
-			this.radioButton3.UseVisualStyleBackColor = true;
+			this.textBoxDivideLine.Location = new System.Drawing.Point(13, 20);
+			this.textBoxDivideLine.Name = "textBoxDivideLine";
+			this.textBoxDivideLine.Size = new System.Drawing.Size(151, 21);
+			this.textBoxDivideLine.TabIndex = 0;
+			this.textBoxDivideLine.TextChanged += new System.EventHandler(this.textBoxDivideLine_TextChanged);
+			// 
+			// BtnHelp
+			// 
+			this.BtnHelp.Location = new System.Drawing.Point(438, 350);
+			this.BtnHelp.Name = "BtnHelp";
+			this.BtnHelp.Size = new System.Drawing.Size(88, 26);
+			this.BtnHelp.TabIndex = 15;
+			this.BtnHelp.Text = "Help";
+			this.BtnHelp.UseVisualStyleBackColor = true;
+			this.BtnHelp.Click += new System.EventHandler(this.BtnHelp_Click);
 			// 
 			// PSYC
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(569, 384);
+			this.ClientSize = new System.Drawing.Size(569, 466);
+			this.Controls.Add(this.BtnHelp);
+			this.Controls.Add(this.groupBox2);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.labelProject);
@@ -267,6 +318,8 @@ namespace PleaseShareYouCode
 			this.g_boxLanguage.PerformLayout();
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox1.PerformLayout();
+			this.groupBox2.ResumeLayout(false);
+			this.groupBox2.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -278,18 +331,23 @@ namespace PleaseShareYouCode
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.CheckedListBox CbFileList;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
-        private RadioButton r_btnCS;
-        private RadioButton r_btnJAVA;
-        private RadioButton r_btnC;
-        private RadioButton r_btnCPP;
+        private RadioButton r_BtnCS;
+        private RadioButton r_BtnJAVA;
+        private RadioButton r_BtnC;
+        private RadioButton r_BtnCPP;
         private GroupBox g_boxLanguage;
         private Label labelProject;
-        private RadioButton r_btnAsm;
+        private RadioButton r_BtnASM;
 		private GroupBox groupBox1;
 		private Label label1;
-		private RadioButton radioButton3;
-		private RadioButton radioButton2;
-		private RadioButton radioButton1;
+		private RadioButton r_BtnASCII;
+		private RadioButton r_BtnUTF8;
+		private RadioButton r_BtnDefault;
+		private GroupBox groupBox2;
+		private Label labelDivideLine;
+		private TextBox textBoxDivideLine;
+		private ToolTip toolTip1;
+		private Button BtnHelp;
 	}
 }
 

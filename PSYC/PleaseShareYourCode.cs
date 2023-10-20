@@ -18,15 +18,7 @@ namespace PleaseShareYouCode
         private bool bIsDragAndDrop = false;
         private List<string> files;
 		private CombinedResultForm mCombineResultForm;
-
-		enum eLanguage
-        {
-            C,
-            CPP,
-            CS,
-            JAVA,
-            ASM
-        }
+		private Settings mSettings;
 
         public PSYC()
         {
@@ -37,38 +29,43 @@ namespace PleaseShareYouCode
 
         private void Setup()
         {
-            string settingPath = Directory.GetCurrentDirectory() + "\\" + "setting.txt";
-			if (!File.Exists(settingPath))
-			{
-				r_btnCS.Checked = true;
-				return;
-			}
+			mSettings = new Settings();
+			mSettings.DeserializeSettings();
 
-            string[] lines = File.ReadAllLines(settingPath);
-            string languageSetting = lines[0].Split('=').Last();
-
-            switch (languageSetting)
+            switch (mSettings.Language)
             {
-                case "cs":
-                    r_btnCS.Checked = true;
+                case ELanguage.C:
+                    r_BtnC.Checked = true;
                     break;
-                case "java":
-                   r_btnJAVA.Checked = true;
+                case ELanguage.CPP:
+                    r_BtnCPP.Checked = true;
                     break;
-                case "c":
-                    r_btnC.Checked = true;
+                case ELanguage.CS:
+                    r_BtnCS.Checked = true;
                     break;
-                case "cpp":
-                    r_btnCPP.Checked = true;
+                case ELanguage.JAVA:
+                   r_BtnJAVA.Checked = true;
                     break;
-                case "asm":
-                    r_btnAsm.Checked = true;
-                    break;
-                default:
-                    Debug.Assert(false, "Unknown language");
+                case ELanguage.ASM:
+                    r_BtnASM.Checked = true;
                     break;
             }
-        }
+
+			switch (mSettings.Encoding)
+			{
+				case EEncoding.Default:
+					r_BtnDefault.Checked = true;
+					break;
+				case EEncoding.UTF8:
+					r_BtnUTF8.Checked = true;
+					break;
+				case EEncoding.ASCII:
+					r_BtnASCII.Checked = true;
+					break;
+			}
+
+			textBoxDivideLine.Text = mSettings.DivideLine;
+		}
 
         private void BtnOpen_Click(object sender, EventArgs e)
         {
@@ -84,23 +81,23 @@ namespace PleaseShareYouCode
 
             files.Clear();
 
-            if (r_btnCS.Checked)
+            if (r_BtnCS.Checked)
             {
                 files.AddRange(Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
                     .Where(s => !s.EndsWith("Program.cs") && !s.EndsWith("AssemblyAttributes.cs") && !s.EndsWith("AssemblyInfo.cs") && s.EndsWith(".cs")));
             }
-            else if (r_btnJAVA.Checked)
+            else if (r_BtnJAVA.Checked)
             {
                 files.AddRange(Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
                     .Where(s => !s.EndsWith("Program.java") && !s.EndsWith("App.java") && !s.EndsWith("Registry.java") && !s.EndsWith("Interface.java") && !s.EndsWith("InterfaceKey.java") && s.EndsWith(".java")));
             }
-            else if (r_btnC.Checked)
+            else if (r_BtnC.Checked)
             {
                 files.AddRange(Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
                     .Where(s => s.EndsWith(".h") || s.EndsWith(".c") && !s.EndsWith("main.c")));
                 ReorderHeader(files);
             }
-            else if (r_btnCPP.Checked)
+            else if (r_BtnCPP.Checked)
             {
                 files.AddRange(Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
                     .Where(s => s.EndsWith(".h") || s.EndsWith(".cpp") && !s.EndsWith("main.cpp")));
@@ -193,59 +190,59 @@ namespace PleaseShareYouCode
 
         private void SetDefaultLanguageCS_Click(object sender, EventArgs e)
         {
-            r_btnCS.Checked = true;
-            SetDefaultLanguage(eLanguage.CS);
+            r_BtnCS.Checked = true;
+            SetDefaultLanguage(ELanguage.CS);
             MessageBox.Show("기본 언어가 C#로 설정되었습니다.", "Message");
         }
 
         private void SetDefaultLanguageJava_Click(object sender, EventArgs e)
         {
-            r_btnJAVA.Checked = true;
-            SetDefaultLanguage(eLanguage.JAVA);
+            r_BtnJAVA.Checked = true;
+            SetDefaultLanguage(ELanguage.JAVA);
             MessageBox.Show("기본 언어가 Java로 설정되었습니다.", "Message");
         }
 
         private void SetDefaultLanguageC_Click(object sender, EventArgs e)
         {
-            r_btnC.Checked = true;
-            SetDefaultLanguage(eLanguage.C);
+            r_BtnC.Checked = true;
+            SetDefaultLanguage(ELanguage.C);
             MessageBox.Show("기본 언어가 C로 설정되었습니다.", "Message");
         }
 
         private void SetDefaultLanguageCpp_Click(object sender, EventArgs e)
         {
-            r_btnCPP.Checked = true;
-            SetDefaultLanguage(eLanguage.CPP);
+            r_BtnCPP.Checked = true;
+            SetDefaultLanguage(ELanguage.CPP);
             MessageBox.Show("기본 언어가 C++로 설정되었습니다.", "Message");
         }
 
         private void SetDefaultLanguageAsm_Click(object sender, EventArgs e)
         {
-            r_btnAsm.Checked = true;
-            SetDefaultLanguage(eLanguage.ASM);
+            r_BtnASM.Checked = true;
+            SetDefaultLanguage(ELanguage.ASM);
             MessageBox.Show("기본 언어가 Assembly로 설정되었습니다.", "Message");
         }
 
-        private void SetDefaultLanguage(eLanguage language)
+        private void SetDefaultLanguage(ELanguage language)
         {
             string settingPath = Directory.GetCurrentDirectory() + "\\" + "setting.txt";
             string defaultLanguage = "";
 
             switch (language)
             {
-                case eLanguage.CS:
+                case ELanguage.CS:
                     defaultLanguage = "Language=cs";
                     break;
-                case eLanguage.JAVA:
+                case ELanguage.JAVA:
                     defaultLanguage = "Language=java";
                     break;
-                case eLanguage.C:
+                case ELanguage.C:
                     defaultLanguage = "Language=c";
                     break;
-                case eLanguage.CPP:
+                case ELanguage.CPP:
                     defaultLanguage = "Language=cpp";
                     break;
-                case eLanguage.ASM:
+                case ELanguage.ASM:
                     defaultLanguage = "Language=asm";
                     break;
                 default:
@@ -286,11 +283,11 @@ namespace PleaseShareYouCode
 			BtnCombine.Enabled = false;
 			StringBuilder sbFilePath = new StringBuilder(256);
 			StringBuilder sbComment = new StringBuilder(256);
-			StringBuilder combinedCode = new StringBuilder(4096);
+			StringBuilder combinedCode = new StringBuilder(16384);
 			List<string> failFiles = new List<string>(CbFileList.Items.Count);
 
 			const string DIVIDING_LINE = "----------------------";
-			string commentStartStr = r_btnAsm.Checked ? ";" : "//";
+			string commentStartStr = r_BtnASM.Checked ? ";" : "//";
 
 			for (int i = 0; i < CbFileList.Items.Count; ++i)
 			{
@@ -354,12 +351,75 @@ namespace PleaseShareYouCode
 			mCombineResultForm.ShowDialog();
 		}
 
-		private void r_btn_CheckedChanged(object sender, EventArgs e)
+		private void r_BtnLanguage_CheckedChanged(object sender, EventArgs e)
 		{
+			if (r_BtnC.Checked)
+			{
+				mSettings.Language = ELanguage.C;
+			}
+			else if (r_BtnCPP.Checked)
+			{
+				mSettings.Language = ELanguage.CPP;
+			}
+			else if (r_BtnCS.Checked)
+			{
+				mSettings.Language = ELanguage.CS;
+			}
+			else if (r_BtnJAVA.Checked)
+			{
+				mSettings.Language = ELanguage.JAVA;
+			}
+			else if (r_BtnASM.Checked)
+			{
+				mSettings.Language = ELanguage.ASM;
+			}
 
+			mSettings.SerializeSettings();
 		}
 
-		private void Encoding_radioButton_CheckedChanged(object sender, EventArgs e)
+		private void r_BtnEncoding_CheckedChanged(object sender, EventArgs e)
+		{
+			if (r_BtnDefault.Checked)
+			{
+				mSettings.Encoding = EEncoding.Default;
+			}
+			else if (r_BtnUTF8.Checked)
+			{
+				mSettings.Encoding = EEncoding.UTF8;
+			}
+			else if (r_BtnASCII.Checked)
+			{
+				mSettings.Encoding = EEncoding.ASCII;
+			}
+
+			mSettings.SerializeSettings();
+		}
+
+		private void textBoxDivideLine_TextChanged(object sender, EventArgs e)
+		{
+			string divideLine = textBoxDivideLine.Text;
+			string final = "";
+			string fileName = "Test.cpp";
+			string nameVar = "%name";
+
+			if (divideLine.Contains("%name"))
+			{
+				final = divideLine.Replace(nameVar, fileName);
+			}
+			else
+			{
+				final = divideLine + fileName;
+			}
+
+			final = "//" + final;
+			labelDivideLine.Text = final;
+			toolTip1.SetToolTip(labelDivideLine, final);
+
+			mSettings.DivideLine = divideLine;
+			mSettings.SerializeSettings();
+		}
+
+		private void BtnHelp_Click(object sender, EventArgs e)
 		{
 
 		}

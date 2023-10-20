@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CombinedResultForm));
 			this.Save_button = new System.Windows.Forms.Button();
 			this.Code_textBox = new System.Windows.Forms.TextBox();
 			this.CopyToClipboard_button = new System.Windows.Forms.Button();
@@ -72,6 +73,7 @@
 			this.Controls.Add(this.CopyToClipboard_button);
 			this.Controls.Add(this.Code_textBox);
 			this.Controls.Add(this.Save_button);
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "CombinedResultForm";
 			this.Text = "Code View";
 			this.ResumeLayout(false);

@@ -51,7 +51,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Letter_P_pink_34907.ico</ApplicationIcon>
+    <ApplicationIcon>share-icon-7nl.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>true</SignManifests>
@@ -95,6 +95,7 @@
     </Compile>
     <Compile Include="PSYC\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PSYC\Settings.cs" />
     <EmbeddedResource Include="PSYC\AutoCloseMessageBox.resx">
       <DependentUpon>AutoCloseMessageBox.cs</DependentUpon>
     </EmbeddedResource>
@@ -129,7 +130,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Letter_P_pink_34907.ico" />
+    <Content Include="share-icon-7nl.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
