@@ -11,7 +11,8 @@ namespace PleaseShareYourCode.PSYC
 	{
 		public ELanguage Language { get; set; }
 		public EEncoding Encoding { get; set; }
-		public string DivideLine { get; set; }
+		public string Separator { get; set; }
+		public string LastFolderPath { get; set; }
 
 		private readonly string path = Path.Combine(Environment.CurrentDirectory, "settings.json");
 
@@ -27,14 +28,18 @@ namespace PleaseShareYourCode.PSYC
 				Settings settings = JsonParser.DeserializeFile<Settings>(path);
 				Language = settings.Language;
 				Encoding = settings.Encoding;
-				DivideLine = settings.DivideLine;
-			}
+				Separator = settings.Separator;
+                LastFolderPath = settings.LastFolderPath;
+
+            }
 			else
 			{
 				Language = ELanguage.C;
 				Encoding = EEncoding.Default;
-				DivideLine = "----- %name -----";
-				JsonParser.Serialize<Settings>(this, path);
+				Separator = "------ %name ------";
+                LastFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+                JsonParser.Serialize<Settings>(this, path);
 			}
 		}
 	}

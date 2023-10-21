@@ -13,18 +13,20 @@ namespace PleaseShareYouCode
 {
     public partial class PSYC : Form
     {
-        private string directoryPath;
-        private bool bIsMouseDown = false;
-        private bool bIsDragAndDrop = false;
-        private List<string> files;
+        private string mDirectoryPath;
+        private bool mbIsMouseDown = false;
+        private bool mbIsDragAndDrop = false;
+        private List<string> mFiles;
 		private CombinedResultForm mCombineResultForm;
 		private Settings mSettings;
+        static private HelpForm mHelpForm;
+        private const string VAR_NAME = "%name";
 
         public PSYC()
         {
             InitializeComponent();
             Setup();
-            files = new List<string>(64);
+            mFiles = new List<string>(64);
         }
 
         private void Setup()
@@ -64,80 +66,88 @@ namespace PleaseShareYouCode
 					break;
 			}
 
-			textBoxDivideLine.Text = mSettings.DivideLine;
+			textBoxSeparator.Text = mSettings.Separator;
 		}
 
         private void BtnOpen_Click(object sender, EventArgs e)
         {
-            folderBrowserDialog1.ShowDialog();
+            FolderBrowserDialog browser = new FolderBrowserDialog()
+            {
+                SelectedPath = mSettings.LastFolderPath
+            };
+            browser.ShowDialog();
 
-            if (folderBrowserDialog1.SelectedPath == "")
+            if (browser.SelectedPath == "")
             {
                 return;
             }
 
-            directoryPath = folderBrowserDialog1.SelectedPath;
+            mDirectoryPath = browser.SelectedPath;
             labelProject.Text = "";
 
-            files.Clear();
+            mFiles.Clear();
 
             if (r_BtnCS.Checked)
             {
-                files.AddRange(Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
+                mFiles.AddRange(Directory.EnumerateFiles(mDirectoryPath, "*.*", SearchOption.AllDirectories)
                     .Where(s => !s.EndsWith("Program.cs") && !s.EndsWith("AssemblyAttributes.cs") && !s.EndsWith("AssemblyInfo.cs") && s.EndsWith(".cs")));
             }
             else if (r_BtnJAVA.Checked)
             {
-                files.AddRange(Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
+                mFiles.AddRange(Directory.EnumerateFiles(mDirectoryPath, "*.*", SearchOption.AllDirectories)
                     .Where(s => !s.EndsWith("Program.java") && !s.EndsWith("App.java") && !s.EndsWith("Registry.java") && !s.EndsWith("Interface.java") && !s.EndsWith("InterfaceKey.java") && s.EndsWith(".java")));
             }
             else if (r_BtnC.Checked)
             {
-                files.AddRange(Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
+                mFiles.AddRange(Directory.EnumerateFiles(mDirectoryPath, "*.*", SearchOption.AllDirectories)
                     .Where(s => s.EndsWith(".h") || s.EndsWith(".c") && !s.EndsWith("main.c")));
-                ReorderHeader(files);
+                ReorderHeader(mFiles);
             }
             else if (r_BtnCPP.Checked)
             {
-                files.AddRange(Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
+                mFiles.AddRange(Directory.EnumerateFiles(mDirectoryPath, "*.*", SearchOption.AllDirectories)
                     .Where(s => s.EndsWith(".h") || s.EndsWith(".cpp") && !s.EndsWith("main.cpp")));
-                ReorderHeader(files);
+                ReorderHeader(mFiles);
             }
-            else
+            else if (r_BtnASM.Checked)
             {
-                files.AddRange(Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
+                mFiles.AddRange(Directory.EnumerateFiles(mDirectoryPath, "*.*", SearchOption.AllDirectories)
                     .Where(s => !s.EndsWith("utils.asm") && !s.EndsWith("_main.asm") && s.EndsWith(".asm") || s.EndsWith(".inc")));
             }
 
-            if (files.Count == 0)
+            if (mFiles.Count == 0)
             {
                 MessageBox.Show("해당 언어로 파일을 찾을 수 없습니다.", "Message");
-                folderBrowserDialog1.SelectedPath = "";
+                browser.SelectedPath = "";
                 return;
             }
 
-            labelProject.Text = directoryPath.Split('\\').Last();
+            labelProject.Text = mDirectoryPath.Split('\\').Last();
             CbFileList.Items.Clear();
-            BtnCombine.Enabled = true;
-            folderBrowserDialog1.SelectedPath = "";
+            browser.SelectedPath = "";
 
-            foreach (string f in files)
+            foreach (string f in mFiles)
             {
                 string fileName = f.Split('\\').Last();
 
                 CbFileList.Items.Add(fileName, true);
             }
+
+            if (CbFileList.Items.Count != 0)
+            {
+                BtnCombine.Enabled = true;
+            }
         }
 
 		private void CbFileList_MouseDown(object sender, MouseEventArgs e)
         {
-            bIsMouseDown = true;
+            mbIsMouseDown = true;
         }
 
         private void CbFileList_MouseUp(object sender, MouseEventArgs e)
         {
-            bIsMouseDown = false;
-            bIsDragAndDrop = false;
+            mbIsMouseDown = false;
+            mbIsDragAndDrop = false;
         }
 
         private void CbFileList_MouseMove(object sender, MouseEventArgs e)
@@ -146,7 +156,7 @@ namespace PleaseShareYouCode
             {
                 return;
             }
-            else if (!bIsMouseDown || bIsDragAndDrop)
+            else if (!mbIsMouseDown || mbIsDragAndDrop)
             {
                 return;
             }
@@ -159,7 +169,7 @@ namespace PleaseShareYouCode
             }
 
             string item = CbFileList.Items[index].ToString();
-            bIsDragAndDrop = true;
+            mbIsDragAndDrop = true;
 
             CbFileList.DoDragDrop(item, DragDropEffects.Move);
         }
@@ -179,81 +189,13 @@ namespace PleaseShareYouCode
             CbFileList.Items.Remove(data);
             CbFileList.Items.Insert(newIndex, data);
             CbFileList.SetItemChecked(newIndex, bIsChecked);
-            bIsDragAndDrop = false;
+            mbIsDragAndDrop = false;
         }
 
         private void CbFileList_DragOver(object sender, DragEventArgs e)
         {
             Console.WriteLine("Start DragOver");
             e.Effect = DragDropEffects.Move;
-        }
-
-        private void SetDefaultLanguageCS_Click(object sender, EventArgs e)
-        {
-            r_BtnCS.Checked = true;
-            SetDefaultLanguage(ELanguage.CS);
-            MessageBox.Show("기본 언어가 C#로 설정되었습니다.", "Message");
-        }
-
-        private void SetDefaultLanguageJava_Click(object sender, EventArgs e)
-        {
-            r_BtnJAVA.Checked = true;
-            SetDefaultLanguage(ELanguage.JAVA);
-            MessageBox.Show("기본 언어가 Java로 설정되었습니다.", "Message");
-        }
-
-        private void SetDefaultLanguageC_Click(object sender, EventArgs e)
-        {
-            r_BtnC.Checked = true;
-            SetDefaultLanguage(ELanguage.C);
-            MessageBox.Show("기본 언어가 C로 설정되었습니다.", "Message");
-        }
-
-        private void SetDefaultLanguageCpp_Click(object sender, EventArgs e)
-        {
-            r_BtnCPP.Checked = true;
-            SetDefaultLanguage(ELanguage.CPP);
-            MessageBox.Show("기본 언어가 C++로 설정되었습니다.", "Message");
-        }
-
-        private void SetDefaultLanguageAsm_Click(object sender, EventArgs e)
-        {
-            r_BtnASM.Checked = true;
-            SetDefaultLanguage(ELanguage.ASM);
-            MessageBox.Show("기본 언어가 Assembly로 설정되었습니다.", "Message");
-        }
-
-        private void SetDefaultLanguage(ELanguage language)
-        {
-            string settingPath = Directory.GetCurrentDirectory() + "\\" + "setting.txt";
-            string defaultLanguage = "";
-
-            switch (language)
-            {
-                case ELanguage.CS:
-                    defaultLanguage = "Language=cs";
-                    break;
-                case ELanguage.JAVA:
-                    defaultLanguage = "Language=java";
-                    break;
-                case ELanguage.C:
-                    defaultLanguage = "Language=c";
-                    break;
-                case ELanguage.CPP:
-                    defaultLanguage = "Language=cpp";
-                    break;
-                case ELanguage.ASM:
-                    defaultLanguage = "Language=asm";
-                    break;
-                default:
-                    Debug.Assert(false , "Unknown language");
-                    break;
-            }
-
-            using (StreamWriter writer = new StreamWriter(File.Open(settingPath, FileMode.Truncate))) 
-            {
-                writer.WriteLine(defaultLanguage);
-            }
         }
 
         private void ReorderHeader(List<string> files)
@@ -274,19 +216,22 @@ namespace PleaseShareYouCode
 
 		private void BtnCombine_Click(object sender, EventArgs e)
 		{
+            if (CbFileList.Items.Count == 0)
+            {
+                BtnCombine.Enabled = false;
+                MessageBox.Show("선택된 파일이 없습니다!", "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
 			if (CbFileList.CheckedItems.Count == 0)
 			{
-				MessageBox.Show("선택된 파일이 없습니다!");
-				return;
+                MessageBox.Show("선택된 파일이 없습니다!", "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
 			}
 
-			BtnCombine.Enabled = false;
-			StringBuilder sbFilePath = new StringBuilder(256);
-			StringBuilder sbComment = new StringBuilder(256);
 			StringBuilder combinedCode = new StringBuilder(16384);
 			List<string> failFiles = new List<string>(CbFileList.Items.Count);
 
-			const string DIVIDING_LINE = "----------------------";
 			string commentStartStr = r_BtnASM.Checked ? ";" : "//";
 
 			for (int i = 0; i < CbFileList.Items.Count; ++i)
@@ -295,19 +240,34 @@ namespace PleaseShareYouCode
 				{
 					string fileName = CbFileList.Items[i].ToString();
 
-					sbComment.Clear();
-					sbFilePath.Clear();
+                    string comment = BuildSeparator(textBoxSeparator.Text, fileName);
+                    string sbComment = commentStartStr + comment;
 
-					sbComment.Append(commentStartStr).Append(DIVIDING_LINE).Append(fileName).Append(DIVIDING_LINE);
-					sbFilePath.Append(files.Find(f => f.EndsWith(fileName)));
+                    string sbFilePath = mFiles.Find(f => f.EndsWith(fileName));
+
+                    Encoding encoding = null;
+                    switch (mSettings.Encoding)
+                    {
+                        case EEncoding.Default:
+                            encoding = Encoding.Default;
+                            break;
+                        case EEncoding.UTF8:
+                            encoding = Encoding.UTF8;
+                            break;
+                        case EEncoding.ASCII:
+                            encoding = Encoding.ASCII;
+                            break;
+                    }
 
 					try
 					{
-						using (StreamReader reader = new StreamReader(File.Open(sbFilePath.ToString(), FileMode.Open), Encoding.Default))
+						using (StreamReader reader = new StreamReader(File.Open(sbFilePath, FileMode.Open), encoding))
 						{
-							combinedCode.AppendLine(sbComment.ToString());
+							combinedCode.AppendLine(sbComment);
 							combinedCode.AppendLine();
-							var a = reader.CurrentEncoding;
+
+							// debug
+                            var a = reader.CurrentEncoding;
 
 							while (!reader.EndOfStream)
 							{
@@ -395,33 +355,43 @@ namespace PleaseShareYouCode
 			mSettings.SerializeSettings();
 		}
 
-		private void textBoxDivideLine_TextChanged(object sender, EventArgs e)
+		private void TextBoxSeparator_TextChanged(object sender, EventArgs e)
 		{
-			string divideLine = textBoxDivideLine.Text;
-			string final = "";
 			string fileName = "Test.cpp";
-			string nameVar = "%name";
-
-			if (divideLine.Contains("%name"))
-			{
-				final = divideLine.Replace(nameVar, fileName);
-			}
-			else
-			{
-				final = divideLine + fileName;
-			}
+            string final = BuildSeparator(textBoxSeparator.Text, fileName);
 
 			final = "//" + final;
-			labelDivideLine.Text = final;
-			toolTip1.SetToolTip(labelDivideLine, final);
+			labelSeparator.Text = final;
+			toolTip1.SetToolTip(labelSeparator, final);
 
-			mSettings.DivideLine = divideLine;
+			mSettings.Separator = textBoxSeparator.Text;
 			mSettings.SerializeSettings();
 		}
 
+        private string BuildSeparator(string separator, string fileName)
+        {
+            string final = "";
+
+            if (separator.Contains(VAR_NAME))
+            {
+                final = separator.Replace(VAR_NAME, fileName);
+            }
+            else
+            {
+                final = separator + fileName;
+            }
+
+            return final;
+        }
+
 		private void BtnHelp_Click(object sender, EventArgs e)
 		{
+            if (mHelpForm == null)
+            {
+                mHelpForm = new HelpForm();
+            }
 
+            mHelpForm.Show();
 		}
 	}
 }

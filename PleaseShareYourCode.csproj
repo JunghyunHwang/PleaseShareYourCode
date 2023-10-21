@@ -86,6 +86,12 @@
       <DependentUpon>CombinedResultForm.cs</DependentUpon>
     </Compile>
     <Compile Include="PSYC\FileSaver.cs" />
+    <Compile Include="PSYC\HelpForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PSYC\HelpForm.Designer.cs">
+      <DependentUpon>HelpForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="PSYC\JsonParser.cs" />
     <Compile Include="PSYC\PleaseShareYourCode.cs">
       <SubType>Form</SubType>
@@ -101,6 +107,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="PSYC\CombinedResultForm.resx">
       <DependentUpon>CombinedResultForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PSYC\HelpForm.resx">
+      <DependentUpon>HelpForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PSYC\PleaseShareYourCode.resx">
       <DependentUpon>PleaseShareYourCode.cs</DependentUpon>
