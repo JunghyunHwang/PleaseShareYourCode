@@ -14,3 +14,24 @@ POCU의 과목을 진행할수록 작성해야 하는 실습/과제 파일들이
 * Drag & Drop 으로 파일들의 순서를 변경할 수 있습니다.
 * 보다 자세한 사용방법은 아래 문서를 참고해주세요  
 [PSYC 프로그램 설치 및 사용](https://docs.google.com/document/d/1htU20ynckoBCVjZoKyCZ85lWflPBinkvCr9ORYsy4OM/edit) - by oakmura
+
+# TomoTherapy 업데이트사항
+## 버그 수정
+1. 파일을 찾을 때 파일이름 끝만 비교(EndsWith() 함수)해서 참이면 가져오는 방식이다 보니 
+	CircleLawn.cpp 와 Lawn.cpp 같이 뒷부분이 같은 파일이름을 구분하지 못하고 먼저 찾는걸 그냥 가져옴.  
+	이 경우에는 C가 L보다 앞이기 때문에 찾는 파일이 Lawn.cpp더라도 CircleLawn.cpp를 먼져 찾기 때문에 이걸 가져오는 버그가 있었음.  
+2. 인코딩 문제 때문에 한글 깨짐 현상 수정
+
+## 신기능
+1. 인코딩 선택기능 추가. OS 따라 무슨 인코딩 할지 알 수 없어 추가
+	StreamReader, Writer 기본값은 UTF8인데 왠지 VS가 UTF8이 아님.
+2. export에서 combine 버튼으로 바꿈
+	코드들을 합쳐서 textbox에 띄워주고 거기서 클립보드에 복사 혹은 파일로 저장 선택하게끔 변경.
+3. Json 저장 박식으로 변경
+	저장 파일을 json 방식으로 포맷변경
+	메뉴 버튼을 통해 기본언어를 바꾸는게 아니라 모든 설정사항이 바뀔때마다 자동저장되게끔 변경
+4. Separator 편집 추가
+	기존 Divide Line 은 고정 폭에 변경 불가능했지만 변경가능하게 바꿈 파일명이 들어가는 키워드는 %name
+5. 창크기 변경가능
+	자유롭게 창크기 조절가능
+6. 폴더브라우저가 이전 선택 경로를 기억하게 있게 변경
