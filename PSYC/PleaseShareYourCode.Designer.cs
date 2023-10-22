@@ -190,10 +190,11 @@ namespace PleaseShareYouCode
             // labelProject
             // 
             this.labelProject.AutoSize = true;
-            this.labelProject.Location = new System.Drawing.Point(62, 11);
+            this.labelProject.Location = new System.Drawing.Point(63, 11);
             this.labelProject.Name = "labelProject";
-            this.labelProject.Size = new System.Drawing.Size(0, 12);
+            this.labelProject.Size = new System.Drawing.Size(21, 12);
             this.labelProject.TabIndex = 10;
+            this.labelProject.Text = "AA";
             // 
             // groupBox1
             // 

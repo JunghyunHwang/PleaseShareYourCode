@@ -139,6 +139,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="PSYC\bugs&amp;features.txt" />
     <Content Include="share-icon-7nl.ico" />
   </ItemGroup>
   <ItemGroup>

@@ -18,18 +18,18 @@ namespace PleaseShareYouCode
         private bool mbIsDragAndDrop = false;
         private List<string> mFiles;
 		private CombinedResultForm mCombineResultForm;
-		private Settings mSettings;
+		static private Settings mSettings;
         static private HelpForm mHelpForm;
         private const string VAR_NAME = "%name";
 
         public PSYC()
         {
             InitializeComponent();
-            Setup();
+            Initialize();
             mFiles = new List<string>(64);
         }
 
-        private void Setup()
+        private void Initialize()
         {
 			mSettings = new Settings();
 			mSettings.DeserializeSettings();
@@ -66,8 +66,84 @@ namespace PleaseShareYouCode
 					break;
 			}
 
-			textBoxSeparator.Text = mSettings.Separator;
+            labelProject.Text = "";
+            textBoxSeparator.Text = mSettings.Separator;
 		}
+
+        private void CbFileList_MouseDown(object sender, MouseEventArgs e)
+        {
+            mbIsMouseDown = true;
+        }
+
+        private void CbFileList_MouseUp(object sender, MouseEventArgs e)
+        {
+            mbIsMouseDown = false;
+            mbIsDragAndDrop = false;
+        }
+
+        private void CbFileList_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (CbFileList.SelectedItem == null)
+            {
+                return;
+            }
+            else if (!mbIsMouseDown || mbIsDragAndDrop)
+            {
+                return;
+            }
+
+            int index = CbFileList.IndexFromPoint(e.X, e.Y);
+
+            if (index < 0)
+            {
+                index = CbFileList.Items.Count - 1;
+            }
+
+            string item = CbFileList.Items[index].ToString();
+            mbIsDragAndDrop = true;
+
+            CbFileList.DoDragDrop(item, DragDropEffects.Move);
+        }
+
+        private void CbFileList_DragDrop(object sender, DragEventArgs e)
+        {
+            Point point = CbFileList.PointToClient(new Point(e.X, e.Y));
+            point.Y = point.Y < 0 ? 0 : point.Y;
+
+            int newIndex = CbFileList.IndexFromPoint(point);
+
+            object data = e.Data.GetData(typeof(string));
+            bool bIsChecked = CbFileList.GetItemChecked(CbFileList.SelectedIndex);
+
+            newIndex = newIndex < 0 ? 0 : newIndex;
+
+            CbFileList.Items.Remove(data);
+            CbFileList.Items.Insert(newIndex, data);
+            CbFileList.SetItemChecked(newIndex, bIsChecked);
+            mbIsDragAndDrop = false;
+        }
+
+        private void CbFileList_DragOver(object sender, DragEventArgs e)
+        {
+            Console.WriteLine("Start DragOver");
+            e.Effect = DragDropEffects.Move;
+        }
+
+        private void ReorderHeader(List<string> files)
+        {
+            for (int i = 0; i < files.Count - 1; i++)
+            {
+                string fileName = files[i].Split('.').First();
+                string nextFileName = files[i + 1].Split('.').First();
+
+                if (fileName == nextFileName)
+                {
+                    string temp = files[i];
+                    files[i] = files[i + 1];
+                    files[i + 1] = temp;
+                }
+            }
+        }
 
         private void BtnOpen_Click(object sender, EventArgs e)
         {
@@ -124,7 +200,6 @@ namespace PleaseShareYouCode
 
             labelProject.Text = mDirectoryPath.Split('\\').Last();
             CbFileList.Items.Clear();
-            browser.SelectedPath = "";
 
             foreach (string f in mFiles)
             {
@@ -137,81 +212,9 @@ namespace PleaseShareYouCode
             {
                 BtnCombine.Enabled = true;
             }
-        }
 
-		private void CbFileList_MouseDown(object sender, MouseEventArgs e)
-        {
-            mbIsMouseDown = true;
-        }
-
-        private void CbFileList_MouseUp(object sender, MouseEventArgs e)
-        {
-            mbIsMouseDown = false;
-            mbIsDragAndDrop = false;
-        }
-
-        private void CbFileList_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (CbFileList.SelectedItem == null)
-            {
-                return;
-            }
-            else if (!mbIsMouseDown || mbIsDragAndDrop)
-            {
-                return;
-            }
-
-            int index = CbFileList.IndexFromPoint(e.X, e.Y);
-
-            if (index < 0)
-            {
-                index = CbFileList.Items.Count - 1;
-            }
-
-            string item = CbFileList.Items[index].ToString();
-            mbIsDragAndDrop = true;
-
-            CbFileList.DoDragDrop(item, DragDropEffects.Move);
-        }
-
-        private void CbFileList_DragDrop(object sender, DragEventArgs e)
-        {
-            Point point = CbFileList.PointToClient(new Point(e.X , e.Y));
-            point.Y = point.Y < 0 ? 0 : point.Y;
-
-            int newIndex = CbFileList.IndexFromPoint(point);
-
-            object data = e.Data.GetData(typeof(string));
-            bool bIsChecked = CbFileList.GetItemChecked(CbFileList.SelectedIndex);
-
-            newIndex = newIndex < 0 ? 0 : newIndex;
-
-            CbFileList.Items.Remove(data);
-            CbFileList.Items.Insert(newIndex, data);
-            CbFileList.SetItemChecked(newIndex, bIsChecked);
-            mbIsDragAndDrop = false;
-        }
-
-        private void CbFileList_DragOver(object sender, DragEventArgs e)
-        {
-            Console.WriteLine("Start DragOver");
-            e.Effect = DragDropEffects.Move;
-        }
-
-        private void ReorderHeader(List<string> files)
-        {
-            for (int i = 0; i < files.Count - 1; i++)
-            {
-                string fileName = files[i].Split('.').First();
-                string nextFileName = files[i + 1].Split('.').First();
-
-                if (fileName == nextFileName)
-                {
-                    string temp = files[i];
-                    files[i] = files[i + 1];
-                    files[i + 1] = temp;
-                }
-            }
+            mSettings.LastFolderPath = browser.SelectedPath;
+            mSettings.SerializeSettings();
         }
 
 		private void BtnCombine_Click(object sender, EventArgs e)
@@ -243,7 +246,8 @@ namespace PleaseShareYouCode
                     string comment = BuildSeparator(textBoxSeparator.Text, fileName);
                     string sbComment = commentStartStr + comment;
 
-                    string sbFilePath = mFiles.Find(f => f.EndsWith(fileName));
+                    //string sbFilePath = mFiles.Find(f => f.EndsWith(fileName)); //bug
+                    string sbFilePath = mFiles.Find(f => f.Split('\\').Last() == fileName);
 
                     Encoding encoding = null;
                     switch (mSettings.Encoding)
@@ -261,13 +265,11 @@ namespace PleaseShareYouCode
 
 					try
 					{
+                        Debug.Assert(sbFilePath != null);
 						using (StreamReader reader = new StreamReader(File.Open(sbFilePath, FileMode.Open), encoding))
 						{
 							combinedCode.AppendLine(sbComment);
-							combinedCode.AppendLine();
-
-							// debug
-                            var a = reader.CurrentEncoding;
+                            Debug.WriteLine(reader.CurrentEncoding);
 
 							while (!reader.EndOfStream)
 							{
@@ -307,7 +309,7 @@ namespace PleaseShareYouCode
 			//CbFileList.Items.Clear();
 			//labelProject.Text = "";
 
-			mCombineResultForm = new CombinedResultForm(combinedCode.ToString());
+			mCombineResultForm = new CombinedResultForm(combinedCode.ToString(), labelProject.Text);
 			mCombineResultForm.ShowDialog();
 		}
 
@@ -391,11 +393,7 @@ namespace PleaseShareYouCode
                 mHelpForm = new HelpForm();
             }
 
-            mHelpForm.Show();
+            mHelpForm.Show(this);
 		}
 	}
 }
-
-// bug list
-// 파일 리스트 순서 바꿀시 이상하게 나오는 버그
-// 인코딩 버그

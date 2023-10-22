@@ -10,7 +10,7 @@ namespace PleaseShareYourCode.PSYC
 {
 	internal class FileSaver
 	{
-		private static SaveFileDialog mSaveFileDialog;
+		static private SaveFileDialog mSaveFileDialog;
 		
 		public static void InitFileSaver()
 		{
@@ -22,14 +22,15 @@ namespace PleaseShareYourCode.PSYC
 			};
 		}
 
-		public static void SaveCodeToTextFile(string text)
+		public static void SaveCodeToTextFile(string text, string fileName)
 		{
 			if (mSaveFileDialog == null)
 			{
 				InitFileSaver();
 			}
 
-			if (mSaveFileDialog.ShowDialog() != DialogResult.OK) return;
+            mSaveFileDialog.FileName = fileName;
+            if (mSaveFileDialog.ShowDialog() != DialogResult.OK) return;
 
 			Stream stream = mSaveFileDialog.OpenFile();
 			using (StreamWriter sw = new StreamWriter(stream, Encoding.UTF8))

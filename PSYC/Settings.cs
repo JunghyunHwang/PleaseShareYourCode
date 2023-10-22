@@ -28,9 +28,23 @@ namespace PleaseShareYourCode.PSYC
 				Settings settings = JsonParser.DeserializeFile<Settings>(path);
 				Language = settings.Language;
 				Encoding = settings.Encoding;
-				Separator = settings.Separator;
-                LastFolderPath = settings.LastFolderPath;
+				if (settings.Separator != null)
+				{
+                    Separator = "------ %name ------";
+                }
+				else
+				{
+					Separator = settings.Separator;
+				}
 
+				if (settings.LastFolderPath == null)
+				{
+                    LastFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+				}
+				else
+				{
+					LastFolderPath = settings.LastFolderPath;
+				}
             }
 			else
 			{
