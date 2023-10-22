@@ -268,8 +268,9 @@ namespace PleaseShareYouCode
                         Debug.Assert(sbFilePath != null);
 						using (StreamReader reader = new StreamReader(File.Open(sbFilePath, FileMode.Open), encoding))
 						{
-							combinedCode.AppendLine(sbComment);
                             Debug.WriteLine(reader.CurrentEncoding);
+							combinedCode.AppendLine(sbComment);
+                            combinedCode.AppendLine();
 
 							while (!reader.EndOfStream)
 							{
