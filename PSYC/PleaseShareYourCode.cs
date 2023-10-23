@@ -151,12 +151,9 @@ namespace PleaseShareYouCode
             {
                 SelectedPath = mSettings.LastFolderPath
             };
-            browser.ShowDialog();
 
-            if (browser.SelectedPath == "")
-            {
-                return;
-            }
+			if (browser.ShowDialog() != DialogResult.OK) return;
+			if (browser.SelectedPath == "") return;
 
             mDirectoryPath = browser.SelectedPath;
             labelProject.Text = "";
@@ -306,9 +303,6 @@ namespace PleaseShareYouCode
 
 				MessageBox.Show(resultMessage.ToString(), "Message");
 			}
-
-			//CbFileList.Items.Clear();
-			//labelProject.Text = "";
 
 			mCombineResultForm = new CombinedResultForm(combinedCode.ToString(), labelProject.Text);
 			mCombineResultForm.ShowDialog();
