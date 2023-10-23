@@ -3,6 +3,7 @@
 	CircleLawn.cpp 와 Lawn.cpp 같이 뒷부분이 같은 파일이름을 구분하지 못하고 먼저 찾는걸 그냥 가져옴.
 	이 경우에는 C가 L보다 앞이기 때문에 Lawn.cpp더라도 CircleLawn.cpp를 먼져 찾기 때문에 이걸 가져오는 뻘짓을 함
 2. 인코딩 버그때문에 한글 깨짐. utf8이 아니더라구
+3. setting.txt 없으면 아예 안열림
 
 신기능
 0. 버그 수정.
