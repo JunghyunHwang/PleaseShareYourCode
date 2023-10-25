@@ -15,14 +15,14 @@ POCU의 과목을 진행할수록 작성해야 하는 실습/과제 파일들이
 * 보다 자세한 사용방법은 아래 문서를 참고해주세요  
 [PSYC 프로그램 설치 및 사용](https://docs.google.com/document/d/1htU20ynckoBCVjZoKyCZ85lWflPBinkvCr9ORYsy4OM/edit) - by oakmura
 
-# TomoTherapy 업데이트사항
-## 버그 수정
+## TomoTherapy 업데이트사항
+### 버그 수정
 1. 파일을 찾을 때 파일이름 끝만 비교(EndsWith() 함수)해서 참이면 가져오는 방식이다 보니 
 	CircleLawn.cpp 와 Lawn.cpp 같이 뒷부분이 같은 파일이름을 구분하지 못하고 먼저 찾는걸 그냥 가져옴.  
 	이 경우에는 C가 L보다 앞이기 때문에 찾는 파일이 Lawn.cpp더라도 CircleLawn.cpp를 먼져 찾기 때문에 이걸 가져오는 버그가 있었음.  
 2. 인코딩 문제 때문에 한글 깨짐 현상 수정
 
-## 신기능
+### 신기능
 1. 인코딩 선택기능 추가  
 	OS 따라 무슨 인코딩 할지 알 수 없어 추가
 3. export에서 combine 버튼으로 바꿈  
