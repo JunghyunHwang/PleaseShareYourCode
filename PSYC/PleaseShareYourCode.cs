@@ -10,12 +10,17 @@ using System.Diagnostics;
 
 namespace PleaseShareYouCode
 {
+    struct FileInfo
+    {
+        public string fileName;
+        public string path;
+    };
     public partial class PSYC : Form
     {
         private string directoryPath;
         private bool bIsMouseDown = false;
         private bool bIsDragAndDrop = false;
-        private List<string> files;
+        private List<FileInfo> files;
 
         enum eLanguage
         {
@@ -30,7 +35,7 @@ namespace PleaseShareYouCode
         {
             InitializeComponent();
             Setup();
-            files = new List<string>(64);
+            files = new List<FileInfo>(64);
         }
 
         private void Setup()
@@ -75,36 +80,50 @@ namespace PleaseShareYouCode
             labelProject.Text = "";
 
             files.Clear();
+            List<string> filePaths;
 
             if (r_btnCS.Checked)
             {
-                files.AddRange(Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
-                    .Where(s => !s.EndsWith("Program.cs") && !s.EndsWith("AssemblyAttributes.cs") && !s.EndsWith("AssemblyInfo.cs") && s.EndsWith(".cs")));
+                filePaths = Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
+                    .Where(s => !s.EndsWith("Program.cs") 
+                        && !s.EndsWith("AssemblyAttributes.cs") 
+                        && !s.EndsWith("AssemblyInfo.cs") 
+                        && s.EndsWith(".cs"))
+                    .ToList();
             }
             else if (r_btnJAVA.Checked)
             {
-                files.AddRange(Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
-                    .Where(s => !s.EndsWith("Program.java") && !s.EndsWith("App.java") && !s.EndsWith("Registry.java") && !s.EndsWith("Interface.java") && !s.EndsWith("InterfaceKey.java") && s.EndsWith(".java")));
+                filePaths = Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
+                    .Where(s => !s.EndsWith("Program.java") 
+                        && !s.EndsWith("App.java") 
+                        && !s.EndsWith("Registry.java") 
+                        && !s.EndsWith("Interface.java") 
+                        && !s.EndsWith("InterfaceKey.java") 
+                        && s.EndsWith(".java")) 
+                    .ToList();
             }
             else if (r_btnC.Checked)
             {
-                files.AddRange(Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
-                    .Where(s => s.EndsWith(".h") || s.EndsWith(".c") && !s.EndsWith("main.c")));
-                ReorderHeader(files);
+                filePaths = Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
+                    .Where(s => s.EndsWith(".h") || s.EndsWith(".c") && !s.EndsWith("main.c")).ToList();
+                reorderHeader(filePaths);
             }
             else if (r_btnCPP.Checked)
             {
-                files.AddRange(Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
-                    .Where(s => s.EndsWith(".h") || s.EndsWith(".cpp") && !s.EndsWith("main.cpp")));
-                ReorderHeader(files);
+                filePaths = Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
+                    .Where(s => s.EndsWith(".h") || s.EndsWith(".cpp") && !s.EndsWith("main.cpp")).ToList();
+                reorderHeader(filePaths);
             }
             else
             {
-                files.AddRange(Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
-                    .Where(s => !s.EndsWith("utils.asm") && !s.EndsWith("_main.asm") && s.EndsWith(".asm") || s.EndsWith(".inc")));
+                filePaths = Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories)
+                    .Where(s => !s.EndsWith("utils.asm") 
+                        && !s.EndsWith("_main.asm") 
+                        && s.EndsWith(".asm") || s.EndsWith(".inc"))
+                    .ToList();
             }
 
-            if (files.Count == 0)
+            if (filePaths.Count == 0)
             {
                 MessageBox.Show("해당 언어로 파일을 찾을 수 없습니다.", "Message");
                 folderBrowserDialog1.SelectedPath = "";
@@ -116,9 +135,27 @@ namespace PleaseShareYouCode
             BtnExport.Enabled = true;
             folderBrowserDialog1.SelectedPath = "";
 
-            foreach (string f in files)
+            foreach (string path in filePaths)
             {
-                string fileName = f.Split('\\').Last();
+                string fileName = null;
+
+                for (int i = path.Length - 1; i >= 0; --i)
+                {
+                    if (path[i] == '\\')
+                    {
+                        Debug.Assert(i + 1 < path.Length);
+                        fileName = path.Substring(i + 1);
+                        break;
+                    }
+                }
+
+                Debug.Assert(fileName != null);
+
+                FileInfo file;
+                file.path = path;
+                file.fileName = fileName;
+
+                files.Add(file);
 
                 CbFileList.Items.Add(fileName, true);
             }
@@ -151,7 +188,7 @@ namespace PleaseShareYouCode
 
             for (int i = 0; i < CbFileList.Items.Count; ++i)
             {
-                if (CbFileList.GetItemChecked(i) == true)
+                if (CbFileList.GetItemChecked(i))
                 {
                     string fileName = CbFileList.Items[i].ToString();
                     
@@ -159,7 +196,7 @@ namespace PleaseShareYouCode
                     sbFilePath.Clear();
 
                     sbComment.Append(commentStartStr).Append(DIVIDING_LINE).Append(fileName).Append(DIVIDING_LINE);
-                    sbFilePath.Append(files.Find(f => f.EndsWith(fileName)));
+                    sbFilePath.Append(files.Find(f => f.fileName == fileName).path);
 
                     try
                     {
@@ -310,7 +347,7 @@ namespace PleaseShareYouCode
         private void SetDefaultLanguage(eLanguage language)
         {
             string settingPath = Directory.GetCurrentDirectory() + "\\" + "setting.txt";
-            string defaultLanguage = "";
+            string defaultLanguage;
 
             switch (language)
             {
@@ -331,7 +368,7 @@ namespace PleaseShareYouCode
                     break;
                 default:
                     Debug.Assert(false , "Unknown language");
-                    break;
+                    return;
             }
 
             using (StreamWriter writer = new StreamWriter(File.Open(settingPath, FileMode.Truncate))) 
@@ -340,18 +377,40 @@ namespace PleaseShareYouCode
             }
         }
 
-        private void ReorderHeader(List<string> files)
+        private void reorderHeader(List<string> filePaths)
         {
-            for (int i = 0; i < files.Count - 1; i++)
+            for (int i = 0; i < filePaths.Count - 1; ++i)
             {
-                string fileName = files[i].Split('.').First();
-                string nextFileName = files[i + 1].Split('.').First();
+                string fileName = null;
+                string nextFileName = null;
+
+                for (int j = filePaths[i].Length - 1; j >= 0; --j)
+                {
+                    if (filePaths[i][j] == '.')
+                    {
+                        Debug.Assert(j != 0);
+                        fileName = filePaths[i].Substring(0, j);
+                    }
+                }
+
+                for (int j = filePaths[i + 1].Length - 1; j >= 0; --j)
+                {
+                    if (filePaths[i + 1][j] == '.')
+                    {
+                        Debug.Assert(j != 0);
+                        nextFileName = filePaths[i + 1].Substring(0, j);
+                    }
+                }
+
+                Debug.Assert(fileName != null);
+                Debug.Assert(nextFileName != null);
 
                 if (fileName == nextFileName)
                 {
-                    string temp = files[i];
-                    files[i] = files[i + 1];
-                    files[i + 1] = temp;
+                    string temp = filePaths[i];
+                    filePaths[i] = filePaths[i + 1];
+                    filePaths[i + 1] = temp;
+                    ++i;
                 }
             }
         }
