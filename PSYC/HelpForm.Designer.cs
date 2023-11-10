@@ -110,9 +110,9 @@
 			this.label7.AutoSize = true;
 			this.label7.Location = new System.Drawing.Point(42, 189);
 			this.label7.Name = "label7";
-			this.label7.Size = new System.Drawing.Size(185, 12);
+			this.label7.Size = new System.Drawing.Size(201, 12);
 			this.label7.TabIndex = 7;
-			this.label7.Text = "파일을 구분문자 포맷 설정입니다";
+			this.label7.Text = "파일 간 구분문자열 포맷 설정입니다";
 			// 
 			// label8
 			// 
